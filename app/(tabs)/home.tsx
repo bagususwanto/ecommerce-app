@@ -4,10 +4,18 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Bike, Book, ShoppingBag, ShoppingCart, Tv } from "lucide-react-native";
+import {
+  Bike,
+  Book,
+  Heart,
+  Search,
+  ShoppingBag,
+  ShoppingCart,
+  Tv,
+} from "lucide-react-native";
 import MyCarousel from "~/components/Carousel";
 import { Text } from "~/components/ui/text";
-import { Header, HeaderScroll } from "~/components/Header";
+import { Header } from "~/components/Header";
 import { LinearGradient } from "expo-linear-gradient";
 import { ProductList } from "~/components/ProductCard";
 import { useCart } from "~/context/CartContext";
@@ -15,6 +23,8 @@ import { ScrollView } from "react-native";
 import { useNotif } from "~/context/NotifContext";
 import { useState } from "react";
 import { useScroll } from "~/context/ScrollContext";
+import { Input } from "~/components/ui/input";
+import { TouchableOpacity } from "react-native";
 
 const categories = [
   { name: "Electronics", icon: Tv },
@@ -171,58 +181,82 @@ export default function HomeScreen() {
   const { notifBottomSheetRef } = useNotif();
   const { handleScroll } = useScroll();
 
-  return (
-    // <LinearGradient
-    //   colors={[
-    //     "#04349c",
-    //     "#04349c",
-    //     "transparent",
-    //     "transparent",
-    //     "transparent",
-    //     "transparent",
-    //     "transparent",
-    //   ]}
-    //   className="p-4 flex-1">
-    <View className="flex-1 px-4">
-      <ScrollView
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss(); // Tutup keyboard jika terbuka
-            bottomSheetRef.current?.close(); // Tutup BottomSheet
-            notifBottomSheetRef.current?.close();
-          }}>
-          <View>
-            <MyCarousel />
-            {/* Category */}
-            <View className="flex-row mt-8 justify-around">
-              {categories.map((item, index) => (
-                <View key={index} className="items-center">
-                  <Pressable>
-                    <View className="w-12 h-12 border-2 border-primary rounded-full bg-transparent justify-center items-center">
-                      <item.icon color="#04349c" size={24} />
-                    </View>
-                  </Pressable>
-                  <Text className="text-gray mt-2 text-sm">{item.name}</Text>
-                </View>
-              ))}
-            </View>
+  const [search, setSearch] = useState("");
 
-            <Text className="text-gray font-semibold text-xl mt-4">
-              {/* Your Frequent Orders */}
-              For You
-            </Text>
-            <View className="w-full">
-              <ProductList products={products} onAddToCart={handleAddToCart} />
+  const handleSearch = (text: string) => {
+    setSearch(text);
+  };
+
+  return (
+    <LinearGradient
+      colors={[
+        "#04349c",
+        "transparent",
+        "transparent",
+        "transparent",
+        "transparent",
+      ]}
+      className="flex-1 px-4">
+      <View>
+        <ScrollView
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss(); // Tutup keyboard jika terbuka
+              bottomSheetRef.current?.close(); // Tutup BottomSheet
+              notifBottomSheetRef.current?.close();
+            }}>
+            <View>
+              <View className="flex-row items-center mt-4">
+                <Input
+                  className="flex-1 max-w-[90%]"
+                  placeholder="Search product..."
+                  value={search}
+                  onChangeText={handleSearch}
+                  aria-labelledby="inputLabel"
+                  aria-errormessage="inputError"
+                  icon={Search}
+                />
+
+                {/* Wishlist Button */}
+                <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2">
+                  <Heart color="white" size={16} />
+                </TouchableOpacity>
+              </View>
+
+              <MyCarousel />
+              {/* Category */}
+              <View className="flex-row mt-8 justify-around">
+                {categories.map((item, index) => (
+                  <View key={index} className="items-center">
+                    <Pressable>
+                      <View className="w-12 h-12 border-2 border-primary rounded-full bg-transparent justify-center items-center">
+                        <item.icon color="#04349c" size={24} />
+                      </View>
+                    </Pressable>
+                    <Text className="text-gray mt-2 text-sm">{item.name}</Text>
+                  </View>
+                ))}
+              </View>
+
+              <Text className="text-gray font-semibold text-xl mt-4">
+                {/* Your Frequent Orders */}
+                For You
+              </Text>
+              <View className="w-full">
+                <ProductList
+                  products={products}
+                  onAddToCart={handleAddToCart}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
-    </View>
-    // </LinearGradient>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </View>
+    </LinearGradient>
   );
 }

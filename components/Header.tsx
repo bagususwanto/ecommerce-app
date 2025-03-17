@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "./ui/text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bell, ShoppingCart, Heart, Search } from "lucide-react-native";
 import {
   Select,
@@ -13,6 +13,11 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
+import { useScroll } from "~/context/ScrollContext";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
 export function Header() {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -52,40 +57,67 @@ export function Header() {
     right: 12,
   };
 
+  const { isScrolled, scrollY } = useScroll();
+
+  // Animasi opacity berdasarkan scrollY
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.value, [0, 50], [1, 0]), // Dari 1 (awal) ke 0 (scroll 50px)
+  }));
+
+  const inputAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.value, [0, 50], [0, 1]), // Dari 0 ke 1 saat scroll lebih dari 50px
+  }));
+
   return (
     <View className="bg-primary">
       <View className="py-4 px-4 mt-5">
         <View className="flex-row justify-between items-center mt-5">
-          {/* Location Selector */}
-          <View className="flex-col">
-            <Text className="text-white text-md">Location</Text>
-            <Select
-              defaultValue={selectedLocation}
-              onValueChange={(option) => {
-                if (option) {
-                  setSelectedLocation(option);
-                }
-              }}>
-              <SelectTrigger className="bg-transparent border border-transparent mt-[-10px]">
-                <SelectValue
-                  className="text-white text-xl font-bold mr-2"
-                  placeholder="Select a location"
-                />
-              </SelectTrigger>
-              <SelectContent insets={contentInsets} className="w-[250px]">
-                <SelectGroup>
-                  {locations.map((location) => (
-                    <SelectItem
-                      label={location.label}
-                      key={location.value}
-                      value={location.value}>
-                      {location.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </View>
+          {isScrolled ? (
+            <Animated.View
+              style={inputAnimatedStyle}
+              className="mt-3 flex-1 max-w-[80%]">
+              <Input
+                placeholder="Search product..."
+                value={search}
+                onChangeText={handleSearch}
+                aria-labelledby="inputLabel"
+                aria-errormessage="inputError"
+                icon={Search}
+              />
+            </Animated.View>
+          ) : (
+            <Animated.View style={animatedStyle}>
+              <View className="flex-col">
+                <Text className="text-white text-md">Location</Text>
+                <Select
+                  defaultValue={selectedLocation}
+                  onValueChange={(option) => {
+                    if (option) {
+                      setSelectedLocation(option);
+                    }
+                  }}>
+                  <SelectTrigger className="bg-transparent border border-transparent mt-[-10px]">
+                    <SelectValue
+                      className="text-white text-xl font-bold mr-2"
+                      placeholder="Select a location"
+                    />
+                  </SelectTrigger>
+                  <SelectContent insets={contentInsets} className="w-[250px]">
+                    <SelectGroup>
+                      {locations.map((location) => (
+                        <SelectItem
+                          label={location.label}
+                          key={location.value}
+                          value={location.value}>
+                          {location.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </View>
+            </Animated.View>
+          )}
 
           {/* Icons (Notification & Cart) */}
           <View className="flex-row items-center">
@@ -110,7 +142,7 @@ export function Header() {
         </View>
 
         {/* Baris Kedua: Search Input */}
-        <View className="flex-row items-center mt-4">
+        {/* <View className="flex-row items-center mt-4">
           <Input
             className="flex-1 max-w-[80%]"
             placeholder="Search product..."
@@ -119,13 +151,13 @@ export function Header() {
             aria-labelledby="inputLabel"
             aria-errormessage="inputError"
             icon={Search}
-          />
+          /> */}
 
-          {/* Wishlist Button */}
-          <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2">
+        {/* Wishlist Button */}
+        {/* <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2">
             <Heart color="white" size={16} />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );

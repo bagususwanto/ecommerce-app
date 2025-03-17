@@ -1,6 +1,8 @@
 import { createContext, useContext, useState } from "react";
+import { useSharedValue } from "react-native-reanimated";
 
 interface ScrollContextType {
+  scrollY: any;
   isScrolled: boolean;
   scrollDirection: "up" | "down" | null;
   handleScroll: (event: any) => void;
@@ -9,29 +11,31 @@ interface ScrollContextType {
 const ScrollContext = createContext<ScrollContextType | undefined>(undefined);
 
 export function ScrollProvider({ children }: { children: React.ReactNode }) {
+  const scrollY = useSharedValue(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(
     null
   );
-  const [prevScrollY, setPrevScrollY] = useState(0);
 
   const handleScroll = (event: any) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
+    const newScrollY = event.nativeEvent.contentOffset.y;
 
-    // Tentukan arah scroll
-    if (offsetY > prevScrollY) {
-      setScrollDirection("down");
-    } else if (offsetY < prevScrollY) {
-      setScrollDirection("up");
+    // Update scroll direction
+    setScrollDirection(newScrollY > scrollY.value ? "down" : "up");
+
+    // Perbarui isScrolled hanya jika melewati threshold tertentu
+    if (newScrollY > 50 && !isScrolled) {
+      setIsScrolled(true);
+    } else if (newScrollY <= 50 && isScrolled) {
+      setIsScrolled(false);
     }
 
-    setIsScrolled(offsetY > 50); // Tetap pakai batasan 50px untuk efek scroll
-    setPrevScrollY(offsetY); // Simpan posisi scroll terakhir
+    scrollY.value = newScrollY;
   };
 
   return (
     <ScrollContext.Provider
-      value={{ isScrolled, scrollDirection, handleScroll }}>
+      value={{ scrollY, isScrolled, scrollDirection, handleScroll }}>
       {children}
     </ScrollContext.Provider>
   );

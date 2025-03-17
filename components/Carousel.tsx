@@ -5,6 +5,7 @@ import Carousel, {
   ICarouselInstance,
   Pagination,
 } from "react-native-reanimated-carousel";
+import { cn } from "~/lib/utils";
 
 const media = [
   "https://dummyimage.com/800x400/808080/ffffff&text=Slide+1",
@@ -25,7 +26,7 @@ function MyCarousel() {
   };
 
   return (
-    <View className="mt-1">
+    <View className={cn("mt-4")}>
       <Carousel
         ref={ref}
         width={width - 30}
