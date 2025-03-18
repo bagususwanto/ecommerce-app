@@ -1,7 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "./ui/text";
-import { useEffect, useState } from "react";
-import { Bell, ShoppingCart, Heart, Search } from "lucide-react-native";
+import { useState } from "react";
+import { Bell, ShoppingCart, Search } from "lucide-react-native";
 import {
   Select,
   SelectContent,
@@ -15,8 +15,10 @@ import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { useScroll } from "~/context/ScrollContext";
 import Animated, {
+  Easing,
   interpolate,
   useAnimatedStyle,
+  withTiming,
 } from "react-native-reanimated";
 
 export function Header() {
@@ -60,12 +62,18 @@ export function Header() {
   const { isScrolled, scrollY } = useScroll();
 
   // Animasi opacity berdasarkan scrollY
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollY.value, [0, 50], [1, 0]), // Dari 1 (awal) ke 0 (scroll 50px)
+  const inputAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(interpolate(scrollY.value, [0, 50], [-1, 1]), {
+      duration: 1000, // Tambahkan durasi animasi
+      easing: Easing.out(Easing.quad), // Easing untuk efek smooth
+    }),
   }));
 
-  const inputAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollY.value, [0, 50], [0, 1]), // Dari 0 ke 1 saat scroll lebih dari 50px
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(interpolate(scrollY.value, [0, 50], [1, 0]), {
+      duration: 300,
+      easing: Easing.out(Easing.quad),
+    }),
   }));
 
   return (
@@ -75,7 +83,7 @@ export function Header() {
           {isScrolled ? (
             <Animated.View
               style={inputAnimatedStyle}
-              className="mt-3 flex-1 max-w-[80%]">
+              className="mt-4 pb-2 flex-1 max-w-[80%]">
               <Input
                 placeholder="Search product..."
                 value={search}
@@ -86,8 +94,8 @@ export function Header() {
               />
             </Animated.View>
           ) : (
-            <Animated.View style={animatedStyle}>
-              <View className="flex-col">
+            <Animated.View style={animatedStyle} className="flex-col pb-1.5">
+              <View>
                 <Text className="text-white text-md">Location</Text>
                 <Select
                   defaultValue={selectedLocation}
@@ -127,7 +135,7 @@ export function Header() {
                 className="absolute -top-2 -right-1 w-5 h-5 flex items-center justify-center rounded-full z-10">
                 <Text className="text-white text-xs font-bold">1</Text>
               </Badge>
-              <Bell color="white" size={24} />
+              <Bell color="white" size={26} />
             </TouchableOpacity>
 
             <TouchableOpacity className="relative ml-4">
@@ -136,28 +144,10 @@ export function Header() {
                 className="absolute -top-2 -right-1 w-5 h-5 flex items-center justify-center rounded-full z-10">
                 <Text className="text-white text-xs font-bold">1</Text>
               </Badge>
-              <ShoppingCart color="white" size={24} />
+              <ShoppingCart color="white" size={26} />
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Baris Kedua: Search Input */}
-        {/* <View className="flex-row items-center mt-4">
-          <Input
-            className="flex-1 max-w-[80%]"
-            placeholder="Search product..."
-            value={search}
-            onChangeText={handleSearch}
-            aria-labelledby="inputLabel"
-            aria-errormessage="inputError"
-            icon={Search}
-          /> */}
-
-        {/* Wishlist Button */}
-        {/* <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2">
-            <Heart color="white" size={16} />
-          </TouchableOpacity>
-        </View> */}
       </View>
     </View>
   );

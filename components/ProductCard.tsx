@@ -36,8 +36,8 @@ export const ProductCard = ({
         />
       </View>
       <View className="mb-4 flex-1">
-        <Text className="font-bold text-gray text-lg">{productName}</Text>
-        <Text className="text-gray text-md">{productNo}</Text>
+        <Text className="font-bold text-black text-lg">{productName}</Text>
+        <Text className="text-black text-md">{productNo}</Text>
       </View>
       <View className="flex-row justify-between items-center">
         <Button onPress={onAddToCart} size={"sm"}>
