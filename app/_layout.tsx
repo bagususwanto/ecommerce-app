@@ -9,12 +9,18 @@ import {
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BackButton } from "~/components/ArrowBack";
+import { Heart } from "~/lib/icons/Heart";
+import { CartProvider } from "~/context/CartContext";
+import { FloatingProductProvider } from "~/context/FloatingProductContext";
+import { NotifProvider } from "~/context/NotifContext";
+import { ScrollProvider } from "~/context/ScrollContext";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -55,17 +61,49 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="login"
-            options={{ title: "Login", headerShown: false }}
-          />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </GestureHandlerRootView>
-      <PortalHost />
+      <NotifProvider>
+        <CartProvider>
+          <FloatingProductProvider>
+            <ScrollProvider>
+              <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen
+                    name="login"
+                    options={{
+                      title: "Login",
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="cart"
+                    options={{
+                      title: "Cart",
+                      headerShown: true,
+                      headerLeft: () => <BackButton />,
+                      headerRight: () => (
+                        <>
+                          <TouchableOpacity className="mr-4">
+                            <Heart
+                              size={20}
+                              className="text-primary font-extrabold"
+                            />
+                          </TouchableOpacity>
+                        </>
+                      ),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
+              </GestureHandlerRootView>
+              <PortalHost />
+            </ScrollProvider>
+          </FloatingProductProvider>
+        </CartProvider>
+      </NotifProvider>
     </ThemeProvider>
   );
 }

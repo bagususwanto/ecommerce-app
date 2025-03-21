@@ -1,27 +1,46 @@
 import { createContext, useContext, useRef, useState } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Product } from "~/types/product";
+import { Cart } from "~/types/cart";
+import { useNotif } from "./NotifContext";
 
 type CartContextType = {
   selectedProduct: Product | null;
   handleAddToCart: (product: Product) => void;
-  bottomSheetRef: React.RefObject<BottomSheet>;
+  bottomSheetRef: React.RefObject<BottomSheetModal>;
+  cartItems: Cart[];
+  setCartItems: React.Dispatch<React.SetStateAction<Cart[]>>;
+  cartCount: number;
+  setCartCount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [cartItems, setCartItems] = useState<Cart[]>([]);
+  const [cartCount, setCartCount] = useState(0);
+
+  const { notifBottomSheetRef } = useNotif();
 
   const handleAddToCart = (product: Product) => {
     setSelectedProduct(product);
-    bottomSheetRef.current?.expand();
+    notifBottomSheetRef.current?.close();
+    bottomSheetRef.current?.present();
   };
 
   return (
     <CartContext.Provider
-      value={{ selectedProduct, handleAddToCart, bottomSheetRef }}>
+      value={{
+        selectedProduct,
+        handleAddToCart,
+        bottomSheetRef,
+        cartItems,
+        setCartItems,
+        cartCount,
+        setCartCount,
+      }}>
       {children}
     </CartContext.Provider>
   );

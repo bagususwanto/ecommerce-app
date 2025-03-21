@@ -3,6 +3,7 @@ import { useSharedValue } from "react-native-reanimated";
 
 interface ScrollContextType {
   scrollY: any;
+  setIsScrolled: React.Dispatch<React.SetStateAction<boolean>>;
   isScrolled: boolean;
   scrollDirection: "up" | "down" | null;
   handleScroll: (event: any) => void;
@@ -35,7 +36,13 @@ export function ScrollProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ScrollContext.Provider
-      value={{ scrollY, isScrolled, scrollDirection, handleScroll }}>
+      value={{
+        scrollY,
+        setIsScrolled,
+        isScrolled,
+        scrollDirection,
+        handleScroll,
+      }}>
       {children}
     </ScrollContext.Provider>
   );

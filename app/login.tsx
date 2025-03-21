@@ -7,7 +7,7 @@ export default function LoginScreen() {
   const router = useRouter();
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View className="flex-1 justify-center items-center">
       <Text>Login Screen</Text>
       <Button onPress={() => router.replace("/(tabs)/home")}>
         <Text>Go to Home</Text>

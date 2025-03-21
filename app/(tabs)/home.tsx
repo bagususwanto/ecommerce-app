@@ -8,23 +8,20 @@ import {
   Bike,
   Book,
   Heart,
-  Search,
   ShoppingBag,
   ShoppingCart,
   Tv,
 } from "lucide-react-native";
 import MyCarousel from "~/components/Carousel";
 import { Text } from "~/components/ui/text";
-import { Header } from "~/components/Header";
-import { LinearGradient } from "expo-linear-gradient";
 import { ProductList } from "~/components/ProductCard";
 import { useCart } from "~/context/CartContext";
 import { ScrollView } from "react-native";
 import { useNotif } from "~/context/NotifContext";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useScroll } from "~/context/ScrollContext";
-import { Input } from "~/components/ui/input";
 import { TouchableOpacity } from "react-native";
+import { SearchBox } from "~/components/header/ui/searchbox";
 
 const categories = [
   { name: "Electronics", icon: Tv },
@@ -179,13 +176,11 @@ const products = [
 export default function HomeScreen() {
   const { handleAddToCart, bottomSheetRef } = useCart();
   const { notifBottomSheetRef } = useNotif();
-  const { handleScroll } = useScroll();
+  const { handleScroll, setIsScrolled } = useScroll();
 
-  const [search, setSearch] = useState("");
-
-  const handleSearch = (text: string) => {
-    setSearch(text);
-  };
+  useEffect(() => {
+    setIsScrolled(false);
+  }, []);
 
   return (
     <View className="flex-1 px-4 py-4">
@@ -203,14 +198,9 @@ export default function HomeScreen() {
           }}>
           <View>
             <View className="flex-row items-center">
-              <Input
-                className="flex-1 border border-gray-400  max-w-[90%]"
+              <SearchBox
                 placeholder="Search product..."
-                value={search}
-                onChangeText={handleSearch}
-                aria-labelledby="inputLabel"
-                aria-errormessage="inputError"
-                icon={Search}
+                className="flex-1 border border-gray-400  max-w-[90%]"
               />
 
               {/* Wishlist Button */}
@@ -220,6 +210,7 @@ export default function HomeScreen() {
             </View>
 
             <MyCarousel />
+            
             {/* Category */}
             <View className="flex-row mt-8 justify-around">
               {categories.map((item, index) => (

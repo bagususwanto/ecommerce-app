@@ -1,130 +1,106 @@
-import { forwardRef, MutableRefObject, useEffect, useState } from "react";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  forwardRef,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import  {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Product } from "~/types/product";
-import { CircleCheck, Minus, Plus, X } from "lucide-react-native";
-import { Image, TouchableOpacity, View } from "react-native";
-import { Input } from "./ui/input";
+import { CircleCheck, Plus } from "lucide-react-native";
+import { Image, View } from "react-native";
 import { useFloatingProduct } from "~/context/FloatingProductContext";
 import { useNotif } from "~/context/NotifContext";
 import { useCart } from "~/context/CartContext";
+import { ProductUI } from "./ProductUI";
+import { useRouter } from "expo-router";
+import QuantitySelector from "./QuantitySelector";
 
 interface CartBottomSheetProps {
   selectedProduct: Product | null;
 }
 
-export const CartBottomSheet = forwardRef<BottomSheet, CartBottomSheetProps>(
-  ({ selectedProduct }, ref) => {
-    const [quantity, setQuantity] = useState(1);
+export const CartBottomSheet = forwardRef<
+  BottomSheetModal,
+  CartBottomSheetProps
+>(({ selectedProduct }, ref) => {
+  const minOrder = selectedProduct?.minOrder || 1; // Default minOrder = 1
+  const [quantity, setQuantity] = useState(minOrder);
 
-    const { showProduct } = useFloatingProduct();
-    const { handleShowNotif } = useNotif();
-    const { bottomSheetRef } = useCart();
+  const { showProduct } = useFloatingProduct();
+  const { handleShowNotif } = useNotif();
+  const { bottomSheetRef, setCartItems, setCartCount, cartItems } = useCart();
 
-    const minOrder = selectedProduct?.minOrder || 1; // Default minOrder = 1
+  // Reset quantity saat BottomSheet ditutup
+  useEffect(() => {
+    if (!selectedProduct) {
+      setQuantity(minOrder);
+    }
+  }, [selectedProduct]);
 
-    // Reset quantity saat BottomSheet ditutup
-    useEffect(() => {
-      if (!selectedProduct) {
-        setQuantity(1);
-      }
-    }, [selectedProduct]);
+  const handleAddToCart = (product: Product) => {
+    showProduct(product.imageUrl);
+    bottomSheetRef.current?.close();
 
-    const handleAddToCart = (product: Product) => {
-      console.log("Add to cart:", product.productName);
-      showProduct(product.imageUrl);
-      bottomSheetRef.current?.close();
+    setCartItems((prevCart) => {
+      const existingItem = prevCart.find(
+        (item) => item.productNo === product.productNo
+      );
 
-      setTimeout(() => {
-        handleShowNotif(product);
-      }, 800);
-    };
+      const updatedCart = existingItem
+        ? prevCart.map((item) =>
+            item.productNo === product.productNo
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        : [...prevCart, { ...product, quantity: quantity }];
 
-    const handleClose = () => {
-      (ref as MutableRefObject<BottomSheet | null>)?.current?.close();
-    };
+      return updatedCart;
+    });
 
-    const increaseQuantity = () => setQuantity((prev) => prev + 1);
-    const decreaseQuantity = () =>
-      setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    setTimeout(() => {
+      handleShowNotif(product);
 
-    const handleQuantityChange = (text: string) => {
-      const parsedValue = parseInt(text, 10);
-      if (!isNaN(parsedValue) && parsedValue >= minOrder) {
-        setQuantity(parsedValue);
-      } else {
-        setQuantity(minOrder); // Tetap minimum order jika kosong
-      }
-    };
+      setCartCount((prevCount) => {
+        const existingItem = cartItems.find(
+          (item) => item.productNo === product.productNo
+        );
 
-    return (
-      <BottomSheet
-        ref={ref}
-        index={-1}
-        snapPoints={["35%", "35%"]}
-        style={{
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          zIndex: 1000,
-        }}
-        onChange={(index) => {
-          if (index === -1) {
-            setQuantity(1); // Reset quantity saat BottomSheet ditutup
-          }
-        }}>
-        {/* Tombol Close */}
-        <TouchableOpacity
-          onPress={handleClose}
-          className="absolute right-3 -top-1 z-10">
-          <X size={24} color="gray" />
-        </TouchableOpacity>
-        <BottomSheetView className="p-2 item-center">
+        if (existingItem) {
+          return prevCount;
+        } else {
+          return prevCount + 1;
+        }
+      });
+    }, 800);
+  };
+
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal
+        style={{ borderColor: "#e5e7eb", borderWidth: 1, borderRadius: 10 }}
+        ref={bottomSheetRef}
+        onChange={() => setQuantity(minOrder)}>
+        <BottomSheetView className="p-4">
           {selectedProduct && (
             <>
-              <BottomSheetView className="flex-row gap-4">
-                <Image
-                  source={{ uri: selectedProduct.imageUrl }}
-                  className="rounded-md w-40 h-40"
-                  alt={selectedProduct.productNo}
-                  resizeMode="cover"
-                />
-                <BottomSheetView className="flex flex-col w-60">
-                  <Text className="font-bold text-gray text-lg flex-wrap">
-                    {selectedProduct.productName}
-                  </Text>
-                  <Text className="text-gray text-md flex-wrap">
-                    {selectedProduct.productNo}
-                  </Text>
-                  <Text className="text-gray text-sm">
-                    Min. Order: {minOrder} (PCS)
-                  </Text>
-                </BottomSheetView>
-              </BottomSheetView>
+              <ProductUI products={selectedProduct} />
               {/* Quantity Selector */}
-              <BottomSheetView className="flex-row items-center justify-between mt-4">
+              <View className="flex-row items-center justify-between mt-4">
                 <Text className="text-gray text-lg">Quantity:</Text>
                 <View className="flex-row h-12 items-center gap-4 border border-gray-300 rounded-lg px-4">
-                  <TouchableOpacity
-                    onPress={decreaseQuantity}
-                    disabled={quantity <= minOrder}>
-                    <Minus
-                      size={20}
-                      color={quantity > minOrder ? "gray" : "#ccc"}
-                    />
-                  </TouchableOpacity>
-                  <Input
-                    className="border-none h-10 text-center text-md text-gray"
-                    keyboardType="numeric"
-                    value={String(quantity)}
-                    onChangeText={handleQuantityChange}
+                  <QuantitySelector
+                    quantity={quantity}
+                    setQuantity={setQuantity}
                   />
-                  <TouchableOpacity onPress={increaseQuantity}>
-                    <Plus size={20} color="gray" />
-                  </TouchableOpacity>
                 </View>
-              </BottomSheetView>
+              </View>
               <Button
                 className="mt-4"
                 onPress={() => handleAddToCart(selectedProduct)}>
@@ -136,38 +112,25 @@ export const CartBottomSheet = forwardRef<BottomSheet, CartBottomSheetProps>(
             </>
           )}
         </BottomSheetView>
-      </BottomSheet>
-    );
-  }
-);
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
+  );
+});
 
-export const NotifiBottomSheet = forwardRef<BottomSheet, CartBottomSheetProps>(
-  ({ selectedProduct }, ref) => {
-    const handleClose = () => {
-      (ref as MutableRefObject<BottomSheet | null>)?.current?.close();
-    };
+export const NotifiBottomSheet = forwardRef<
+  BottomSheetModal,
+  CartBottomSheetProps
+>(({ selectedProduct }, ref) => {
+  const route = useRouter();
+  const { notifBottomSheetRef } = useNotif();
 
-    const handleCheckCart = () => {
-      console.log("Check Cart");
-    };
+  // const handleClose = () => {
+  //   (ref as MutableRefObject<BottomSheetModal | null>)?.current?.close();
+  // };
 
-    return (
-      <BottomSheet
-        ref={ref}
-        index={-1}
-        snapPoints={["22%", "22%"]}
-        style={{
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          zIndex: 1000,
-        }}>
-        {/* Tombol Close */}
-        <TouchableOpacity
-          onPress={handleClose}
-          className="absolute right-3 -top-1 z-10">
-          <X size={24} color="gray" />
-        </TouchableOpacity>
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal ref={notifBottomSheetRef}>
         <BottomSheetView className="p-2 item-center">
           {selectedProduct && (
             <>
@@ -193,7 +156,12 @@ export const NotifiBottomSheet = forwardRef<BottomSheet, CartBottomSheetProps>(
                   </View>
                 </BottomSheetView>
               </BottomSheetView>
-              <Button className="mt-4" onPress={() => handleCheckCart()}>
+              <Button
+                className="mt-4"
+                onPress={() => {
+                  notifBottomSheetRef.current?.close();
+                  route.push("/cart");
+                }}>
                 <View className="flex-row items-center">
                   <Text>Check Shopping Cart</Text>
                 </View>
@@ -201,7 +169,7 @@ export const NotifiBottomSheet = forwardRef<BottomSheet, CartBottomSheetProps>(
             </>
           )}
         </BottomSheetView>
-      </BottomSheet>
-    );
-  }
-);
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
+  );
+});

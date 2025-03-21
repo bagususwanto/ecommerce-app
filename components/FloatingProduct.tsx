@@ -39,7 +39,7 @@ const FloatingProduct = ({
     if (startAnimation) {
       // Hitung posisi tujuan berdasarkan ukuran layar
       const targetX = width * 0.8; // Menuju tengah layar (bisa disesuaikan)
-      const targetY = -height * 0.8; // Naik ke atas, 70% dari tinggi layar
+      const targetY = -height * 0.7; // Naik ke atas, 70% dari tinggi layar
 
       translateX.value = withTiming(targetX, {
         duration: 1000,

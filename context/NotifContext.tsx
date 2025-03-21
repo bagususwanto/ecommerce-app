@@ -1,22 +1,22 @@
 import { createContext, useContext, useRef, useState } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
+import  { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Product } from "~/types/product";
 
 type NotifContextType = {
   selectedProduct: Product | null;
   handleShowNotif: (product: Product) => void;
-  notifBottomSheetRef: React.RefObject<BottomSheet>;
+  notifBottomSheetRef: React.RefObject<BottomSheetModal>;
 };
 
 const NotifContext = createContext<NotifContextType | undefined>(undefined);
 
 export function NotifProvider({ children }: { children: React.ReactNode }) {
-  const notifBottomSheetRef = useRef<BottomSheet>(null);
+  const notifBottomSheetRef = useRef<BottomSheetModal>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleShowNotif = (product: Product) => {
     setSelectedProduct(product);
-    notifBottomSheetRef.current?.expand();
+    notifBottomSheetRef.current?.present();
   };
 
   return (
