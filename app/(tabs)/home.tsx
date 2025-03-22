@@ -1,4 +1,5 @@
 import {
+  Image,
   Keyboard,
   Pressable,
   TouchableWithoutFeedback,
@@ -22,13 +23,15 @@ import { useEffect } from "react";
 import { useScroll } from "~/context/ScrollContext";
 import { TouchableOpacity } from "react-native";
 import { SearchBox } from "~/components/header/ui/searchbox";
+import { LocationSelect } from "~/components/header/ui/locationselect";
+import { LinearGradient } from "expo-linear-gradient";
 
 const categories = [
-  { name: "Electronics", icon: Tv },
-  { name: "Fashion", icon: ShoppingBag },
-  { name: "Groceries", icon: ShoppingCart },
-  { name: "Books", icon: Book },
-  { name: "Fitness", icon: Bike },
+  { name: "Electronics", img: "https://picsum.photos/50?random=1" },
+  { name: "Fashion", img: "https://picsum.photos/50?random=2" },
+  { name: "Groceries", img: "https://picsum.photos/50?random=3" },
+  { name: "Books", img: "https://picsum.photos/50?random=4" },
+  { name: "Fitness", img: "https://picsum.photos/50?random=5" },
 ];
 
 const products = [
@@ -183,44 +186,62 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <View className="flex-1 px-4 py-4">
-      <ScrollView
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss(); // Tutup keyboard jika terbuka
-            bottomSheetRef.current?.close(); // Tutup BottomSheet
-            notifBottomSheetRef.current?.close();
-          }}>
-          <View>
-            <View className="flex-row items-center">
+    <ScrollView
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss(); // Tutup keyboard jika terbuka
+          bottomSheetRef.current?.close(); // Tutup BottomSheet
+          notifBottomSheetRef.current?.close();
+        }}>
+        <LinearGradient
+          colors={[
+            "#04349c",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+          ]}
+          className="flex-1">
+          <View className="px-4 py-4 mt-8">
+            <View className="flex-col w-[20%]">
+              <LocationSelect />
+            </View>
+            <View className="flex-row items-center mt-4">
               <SearchBox
                 placeholder="Search product..."
-                className="flex-1 border border-gray-400  max-w-[90%]"
+                className="flex-1 border border-gray-400  max-w-[95%]"
               />
 
               {/* Wishlist Button */}
-              <TouchableOpacity className="ml-4 border-2 border-gray-400  rounded-full p-2">
-                <Heart color="gray" size={18} />
+              <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2 shadow-md">
+                <Heart color="white" size={18} />
               </TouchableOpacity>
             </View>
 
             <MyCarousel />
-            
+
             {/* Category */}
             <View className="flex-row mt-8 justify-around">
               {categories.map((item, index) => (
                 <View key={index} className="items-center">
                   <Pressable>
-                    <View className="w-12 h-12 border-2 border-gray-400 rounded-full bg-transparent justify-center items-center">
-                      <item.icon color="gray" size={24} />
-                    </View>
+                    <Image
+                      source={{ uri: item.img }}
+                      className="w-12 h-12 rounded-full shadow-md"
+                      resizeMode="contain"
+                    />
                   </Pressable>
-                  <Text className="text-gray-700  mt-2 text-sm">
+                  <Text className="text-gray-700 mt-2 text-sm">
                     {item.name}
                   </Text>
                 </View>
@@ -235,8 +256,8 @@ export default function HomeScreen() {
               <ProductList products={products} onAddToCart={handleAddToCart} />
             </View>
           </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
-    </View>
+        </LinearGradient>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 }

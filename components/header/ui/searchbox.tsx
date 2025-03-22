@@ -19,6 +19,7 @@ export function SearchBox({ placeholder, className }: SearchBoxProps) {
     <Input
       className={cn("", className)}
       placeholder={placeholder}
+      returnKeyType="search"
       value={search}
       onChangeText={handleSearch}
       aria-labelledby="inputLabel"

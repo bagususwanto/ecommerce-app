@@ -1,23 +1,22 @@
 import { useRouter } from "expo-router";
 import { Bell, ShoppingCart } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Badge } from "~/components/ui/badge";
 import { Text } from "~/components/ui/text";
 import { useCart } from "~/context/CartContext";
+import { cn } from "~/lib/utils";
 
-export function HeaderIcon() {
+interface HeaderIconProps {
+  className?: string;
+}
+
+export function HeaderIcon({ className }: HeaderIconProps) {
   const router = useRouter();
   const { cartCount } = useCart();
 
   return (
-    <View className="flex-row items-center">
+    <View className={cn("flex-row items-center", className)}>
       <TouchableOpacity className="relative">
-        {/* <Badge
-          variant="destructive"
-          className="absolute -top-2 -right-1 w-5 h-5 flex items-center justify-center rounded-full z-10">
-          <Text className="text-white text-xs font-bold">1</Text>
-        </Badge> */}
         <Bell color="white" size={26} />
       </TouchableOpacity>
 

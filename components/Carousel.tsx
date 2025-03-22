@@ -8,9 +8,9 @@ import Carousel, {
 import { cn } from "~/lib/utils";
 
 const media = [
-  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+1",
-  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+2",
-  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+3",
+  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+1%20",
+  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+2%20",
+  "https://dummyimage.com/800x400/808080/ffffff&text=Slide+3%20",
 ];
 const width = Dimensions.get("window").width;
 
@@ -30,7 +30,7 @@ function MyCarousel() {
       <Carousel
         ref={ref}
         width={width - 30}
-        height={(width - 200) / 2}
+        height={(width - 250) / 2}
         data={media}
         onProgressChange={progress}
         loop
