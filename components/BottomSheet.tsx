@@ -1,11 +1,9 @@
 import {
   forwardRef,
-  MutableRefObject,
-  useCallback,
   useEffect,
   useState,
 } from "react";
-import  {
+import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
@@ -130,21 +128,23 @@ export const NotifiBottomSheet = forwardRef<
 
   return (
     <BottomSheetModalProvider>
-      <BottomSheetModal ref={notifBottomSheetRef}>
-        <BottomSheetView className="p-2 item-center">
+      <BottomSheetModal
+        ref={notifBottomSheetRef}
+        style={{ borderColor: "#e5e7eb", borderWidth: 1, borderRadius: 10 }}>
+        <BottomSheetView className="p-4 item-center">
           {selectedProduct && (
             <>
               <Text className="font-bold text-gray text-2xl flex-wrap">
                 Complete Your Shopping
               </Text>
-              <BottomSheetView className="flex-row gap-4 mt-4">
+              <View className="flex-row gap-4 mt-4">
                 <Image
                   source={{ uri: selectedProduct.imageUrl }}
                   className="rounded-md w-10 h-10"
                   alt={selectedProduct.productNo}
                   resizeMode="cover"
                 />
-                <BottomSheetView className="flex flex-col w-60">
+                <View className="flex flex-col">
                   <Text className="text-gray text-md flex-wrap">
                     {selectedProduct.productName}
                   </Text>
@@ -154,8 +154,8 @@ export const NotifiBottomSheet = forwardRef<
                       Added to the shopping cart
                     </Text>
                   </View>
-                </BottomSheetView>
-              </BottomSheetView>
+                </View>
+              </View>
               <Button
                 className="mt-4"
                 onPress={() => {

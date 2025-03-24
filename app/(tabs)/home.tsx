@@ -5,14 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import {
-  Bike,
-  Book,
-  Heart,
-  ShoppingBag,
-  ShoppingCart,
-  Tv,
-} from "lucide-react-native";
+import { Heart } from "lucide-react-native";
 import MyCarousel from "~/components/Carousel";
 import { Text } from "~/components/ui/text";
 import { ProductList } from "~/components/ProductCard";
@@ -212,7 +205,7 @@ export default function HomeScreen() {
             "transparent",
           ]}
           className="flex-1">
-          <View className="px-4 py-4 mt-8">
+          <View className="px-4 py-4 mt-10">
             <View className="flex-col w-[20%]">
               <LocationSelect />
             </View>
@@ -224,7 +217,7 @@ export default function HomeScreen() {
 
               {/* Wishlist Button */}
               <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2 shadow-md">
-                <Heart color="white" size={18} />
+                <Heart color="white" size={16} />
               </TouchableOpacity>
             </View>
 

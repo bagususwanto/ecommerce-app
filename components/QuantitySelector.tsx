@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
-  TouchableOpacity,
   TextInput,
   Keyboard,
 } from "react-native";
+import IconButton from "./IconButton";
+import { Minus, Plus } from "lucide-react-native";
 
 type QuantitySelectorProps = {
   quantity: number;
@@ -53,11 +53,15 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
   return (
     <View className="flex-row items-center space-x-2">
-      <TouchableOpacity className="px-3 py-1" onPress={decrease}>
-        <Text className="text-2xl">-</Text>
-      </TouchableOpacity>
+      <IconButton
+        className="px-3"
+        icon={Minus}
+        color="gray"
+        size={18}
+        onPress={decrease}
+      />
       <TextInput
-        className="text-lg font-bold text-center px-3 py-1"
+        className="text-md text-center px-3"
         inputMode="numeric"
         value={inputValue}
         onChangeText={handleChange}
@@ -65,9 +69,13 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
         cursorColor={"blue"}
         style={{ minWidth: Math.max(40, inputValue.length * 14) }}
       />
-      <TouchableOpacity className="px-3 py-1" onPress={increase}>
-        <Text className="text-2xl">+</Text>
-      </TouchableOpacity>
+      <IconButton
+        className="px-3"
+        icon={Plus}
+        color="gray"
+        size={18}
+        onPress={increase}
+      />
     </View>
   );
 };

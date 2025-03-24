@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { ArrowLeft } from "~/lib/icons/ArrowLeft";
 

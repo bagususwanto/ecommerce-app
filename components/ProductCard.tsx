@@ -1,9 +1,10 @@
-import { TouchableOpacity, Dimensions, View, Image } from "react-native";
+import {  Dimensions, View, Image } from "react-native";
 import { Heart, Plus } from "lucide-react-native";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Text } from "./ui/text";
 import { Product } from "~/types/product";
+import IconButton from "./IconButton";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width / 2 - 16;
@@ -46,9 +47,12 @@ export const ProductCard = ({
             <Text>Cart</Text>
           </View>
         </Button>
-        <TouchableOpacity onPress={onWishlist}>
-          <Heart color="gray" size={24} />
-        </TouchableOpacity>
+        <IconButton
+          icon={Heart}
+          size={20}
+          color={"gray"}
+          onPress={onWishlist}
+        />
       </View>
     </Card>
   );

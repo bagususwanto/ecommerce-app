@@ -9,14 +9,18 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
-import { LocationSelect } from "./ui/locationselect";
 import { SearchBox } from "./ui/searchbox";
-import { HeaderIcon } from "./ui/headericon";
 import { useState } from "react";
+import IconButton from "../IconButton";
+import { Bell, ShoppingCart } from "lucide-react-native";
+import { useCart } from "~/context/CartContext";
+import { useRouter } from "expo-router";
 
 export function Header() {
   const { scrollY } = useScroll();
   const [searchBoxEnabled, setSearchBoxEnabled] = useState(false);
+  const { cartCount } = useCart();
+  const router = useRouter();
 
   // Animasi opacity untuk SearchBox
   const opacity = useDerivedValue(() => {
@@ -52,7 +56,7 @@ export function Header() {
       style={headerAnimatedStyle}
       pointerEvents="box-none"
       className="absolute top-0 left-0 right-0 z-50">
-      <View className="py-4 px-4 mt-4">
+      <View className="py-4 px-4 mt-8">
         <View className="flex-row justify-between items-center mt-4">
           <Animated.View
             pointerEvents={pointerEvents}
@@ -61,7 +65,14 @@ export function Header() {
             <SearchBox placeholder="Search product..." />
           </Animated.View>
           {/* Icons (Notification & Cart) */}
-          <HeaderIcon className="ml-4"/>
+          <IconButton className="ml-2" icon={Bell} />
+          <IconButton
+            className="ml-2"
+            icon={ShoppingCart}
+            counting={true}
+            count={cartCount}
+            onPress={() => router.push("/cart")}
+          />
         </View>
       </View>
     </Animated.View>
@@ -69,16 +80,25 @@ export function Header() {
 }
 
 export function HeaderSimple() {
+  const { cartCount } = useCart();
+  const router = useRouter();
   return (
     <View className="bg-primary">
-      <View className="py-4 px-4 mt-4">
+      <View className="py-4 px-4 mt-8">
         <View className="flex-row justify-between items-center mt-4">
-          <View className="mt-4 flex-1 max-w-[90%]">
+          <View className="flex-1 max-w-[90%]">
             <SearchBox placeholder="Search transaction..." />
           </View>
 
           {/* Icons (Notification & Cart) */}
-          <HeaderIcon />
+          <IconButton className="ml-2" icon={Bell} />
+          <IconButton
+            className="ml-2"
+            icon={ShoppingCart}
+            counting={true}
+            count={cartCount}
+            onPress={() => router.push("/cart")}
+          />
         </View>
       </View>
     </View>

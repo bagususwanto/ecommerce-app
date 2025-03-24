@@ -9,14 +9,12 @@ import {
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform, TouchableOpacity } from "react-native";
+import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BackButton } from "~/components/ArrowBack";
-import { Heart } from "~/lib/icons/Heart";
 import { CartProvider } from "~/context/CartContext";
 import { FloatingProductProvider } from "~/context/FloatingProductContext";
 import { NotifProvider } from "~/context/NotifContext";
@@ -60,13 +58,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <NotifProvider>
-        <CartProvider>
-          <FloatingProductProvider>
-            <ScrollProvider>
-              <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-              <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <NotifProvider>
+          <CartProvider>
+            <FloatingProductProvider>
+              <ScrollProvider>
+                {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
+                <StatusBar style={"light"} />
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen
                     name="login"
@@ -80,17 +79,21 @@ export default function RootLayout() {
                     options={{
                       title: "Cart",
                       headerShown: true,
-                      headerLeft: () => <BackButton />,
-                      headerRight: () => (
-                        <>
-                          <TouchableOpacity className="mr-4">
-                            <Heart
-                              size={20}
-                              className="text-primary font-extrabold"
-                            />
-                          </TouchableOpacity>
-                        </>
-                      ),
+                      // headerLeft: () => <BackButton />,
+                      // headerRight: () => (
+                      //   <>
+                      //     <TouchableOpacity
+                      //       className="mr-4"
+                      //       onPress={() => {
+                      //         console.log("Add to wishlist");
+                      //       }}>
+                      //       <Heart
+                      //         size={20}
+                      //         className="text-gray-800 font-extrabold"
+                      //       />
+                      //     </TouchableOpacity>
+                      //   </>
+                      // ),
                     }}
                   />
                   <Stack.Screen
@@ -98,13 +101,13 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                 </Stack>
-              </GestureHandlerRootView>
-              <PortalHost />
-            </ScrollProvider>
-          </FloatingProductProvider>
-        </CartProvider>
-      </NotifProvider>
-    </ThemeProvider>
+                <PortalHost />
+              </ScrollProvider>
+            </FloatingProductProvider>
+          </CartProvider>
+        </NotifProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
