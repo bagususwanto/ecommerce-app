@@ -1,7 +1,9 @@
 import * as React from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 import { cn } from "~/lib/utils";
-import { LucideIcon } from "lucide-react-native";
+import { CircleX, LucideIcon } from "lucide-react-native";
+import IconButton from "../IconButton";
+import { useSearch } from "~/context/SearchContext";
 
 const Input = React.forwardRef<
   React.ElementRef<typeof TextInput>,
@@ -15,6 +17,7 @@ const Input = React.forwardRef<
     { className, inputClassName, placeholderClassName, icon: Icon, ...props },
     ref
   ) => {
+    const { searchTerm, setSearchTerm } = useSearch();
     return (
       <View
         className={cn(
@@ -35,6 +38,16 @@ const Input = React.forwardRef<
           )}
           {...props}
         />
+        {searchTerm && (
+          <IconButton
+            icon={CircleX}
+            size={16}
+            color="white"
+            fill={true}
+            fillColor="gray"
+            onPress={() => setSearchTerm("")}
+          />
+        )}
       </View>
     );
   }

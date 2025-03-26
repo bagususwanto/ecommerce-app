@@ -18,6 +18,7 @@ import { TouchableOpacity } from "react-native";
 import { SearchBox } from "~/components/header/ui/searchbox";
 import { LocationSelect } from "~/components/header/ui/locationselect";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 
 const categories = [
   { name: "Electronics", img: "https://picsum.photos/50?random=1" },
@@ -173,6 +174,7 @@ export default function HomeScreen() {
   const { handleAddToCart, bottomSheetRef } = useCart();
   const { notifBottomSheetRef } = useNotif();
   const { handleScroll, setIsScrolled } = useScroll();
+  const router = useRouter();
 
   useEffect(() => {
     setIsScrolled(false);
@@ -223,6 +225,9 @@ export default function HomeScreen() {
               <SearchBox
                 placeholder="Search product..."
                 className="flex-1 border border-gray-400  max-w-[95%]"
+                toSearch={() => {
+                  router.push("/search");
+                }}
               />
 
               {/* Wishlist Button */}

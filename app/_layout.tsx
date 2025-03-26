@@ -19,7 +19,8 @@ import { CartProvider } from "~/context/CartContext";
 import { FloatingProductProvider } from "~/context/FloatingProductContext";
 import { NotifProvider } from "~/context/NotifContext";
 import { ScrollProvider } from "~/context/ScrollContext";
-import { HeaderCart } from "~/components/header/Header";
+import { HeaderCart, HeaderSearch } from "~/components/header/Header";
+import { SearchProvider } from "~/context/SearchContext";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -61,38 +62,48 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <NotifProvider>
-          <CartProvider>
-            <FloatingProductProvider>
-              <ScrollProvider>
-                {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
-                <StatusBar style={"light"} />
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen
-                    name="login"
-                    options={{
-                      title: "Login",
-                      headerShown: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="cart"
-                    options={{
-                      title: "",
-                      headerShown: true,
-                      header: () => <HeaderCart />,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                </Stack>
-                <PortalHost />
-              </ScrollProvider>
-            </FloatingProductProvider>
-          </CartProvider>
-        </NotifProvider>
+        <SearchProvider>
+          <NotifProvider>
+            <CartProvider>
+              <FloatingProductProvider>
+                <ScrollProvider>
+                  {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
+                  <StatusBar style={"light"} />
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                      name="login"
+                      options={{
+                        title: "Login",
+                        headerShown: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="cart"
+                      options={{
+                        title: "",
+                        headerShown: true,
+                        header: () => <HeaderCart />,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="search"
+                      options={{
+                        title: "",
+                        headerShown: true,
+                        header: () => <HeaderSearch />,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack>
+                  <PortalHost />
+                </ScrollProvider>
+              </FloatingProductProvider>
+            </CartProvider>
+          </NotifProvider>
+        </SearchProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

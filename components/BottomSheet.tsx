@@ -8,7 +8,7 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Product } from "~/types/product";
 import { CircleCheck, Plus } from "lucide-react-native";
-import { Image, View } from "react-native";
+import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { useFloatingProduct } from "~/context/FloatingProductContext";
 import { useNotif } from "~/context/NotifContext";
 import { useCart } from "~/context/CartContext";
@@ -81,31 +81,36 @@ export const CartBottomSheet = forwardRef<
         style={{ borderColor: "#e5e7eb", borderWidth: 1, borderRadius: 10 }}
         ref={bottomSheetRef}
         onChange={() => setQuantity(minOrder)}>
-        <BottomSheetView className="p-4">
-          {selectedProduct && (
-            <>
-              <ProductUI products={selectedProduct} />
-              {/* Quantity Selector */}
-              <View className="flex-row items-center justify-between mt-4">
-                <Text className="text-black text-lg">Quantity:</Text>
-                <View className="flex-row h-12 items-center gap-4 border border-gray-300 rounded-lg px-4">
-                  <QuantitySelector
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                  />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss(); // Tutup keyboard jika terbuka
+          }}>
+          <BottomSheetView className="p-4">
+            {selectedProduct && (
+              <>
+                <ProductUI products={selectedProduct} />
+                {/* Quantity Selector */}
+                <View className="flex-row items-center justify-between mt-4">
+                  <Text className="text-black text-lg">Quantity:</Text>
+                  <View className="flex-row h-12 items-center gap-4 border border-gray-300 rounded-lg px-4">
+                    <QuantitySelector
+                      quantity={quantity}
+                      setQuantity={setQuantity}
+                    />
+                  </View>
                 </View>
-              </View>
-              <Button
-                className="mt-4"
-                onPress={() => handleAddToCart(selectedProduct)}>
-                <View className="flex-row items-center gap-2">
-                  <Plus color="white" size={18} />
-                  <Text>Shopping Cart</Text>
-                </View>
-              </Button>
-            </>
-          )}
-        </BottomSheetView>
+                <Button
+                  className="mt-4"
+                  onPress={() => handleAddToCart(selectedProduct)}>
+                  <View className="flex-row items-center gap-2">
+                    <Plus color="white" size={18} />
+                    <Text>Shopping Cart</Text>
+                  </View>
+                </Button>
+              </>
+            )}
+          </BottomSheetView>
+        </TouchableWithoutFeedback>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );

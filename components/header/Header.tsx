@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TextInput, TouchableOpacity, View } from "react-native";
 import { useScroll } from "~/context/ScrollContext";
 import Animated, {
   Easing,
@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { SearchBox } from "./ui/searchbox";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import IconButton from "../IconButton";
 import { Bell, ShoppingCart } from "lucide-react-native";
 import { useCart } from "~/context/CartContext";
@@ -64,7 +64,12 @@ export function Header() {
             pointerEvents={pointerEvents}
             style={inputAnimatedStyle}
             className="flex-1 max-w-[90%]">
-            <SearchBox placeholder="Search product..." />
+            <SearchBox
+              placeholder="Search product..."
+              toSearch={() => {
+                router.push("/search");
+              }}
+            />
           </Animated.View>
           {/* Icons (Notification & Cart) */}
           <IconButton className="ml-2" icon={Bell} />
@@ -108,7 +113,6 @@ export function HeaderSimple() {
 }
 
 export function HeaderCart() {
-  const router = useRouter();
   const { isChange, setIsChange } = useCart();
   return (
     <View className="bg-primary">
@@ -124,6 +128,29 @@ export function HeaderCart() {
                 {isChange ? "Done" : "Edit"}
               </Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+export function HeaderSearch() {
+  const searchBoxRef = useRef<TextInput>(null); // Buat ref untuk input
+
+  useEffect(() => {
+    setTimeout(() => {
+      searchBoxRef.current?.focus(); // Fokuskan input saat header muncul
+    }, 300);
+  }, []);
+
+  return (
+    <View className="bg-primary">
+      <View className="py-4 px-4 mt-8">
+        <View className="flex-row justify-between items-center mt-4">
+          <BackButton />
+          <View className="gap-2 flex-1 items-center">
+            <SearchBox ref={searchBoxRef} placeholder="Search product..." />
           </View>
         </View>
       </View>
