@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Product } from "~/types/product";
 import { Cart } from "~/types/cart";
@@ -11,7 +11,8 @@ type CartContextType = {
   cartItems: Cart[];
   setCartItems: React.Dispatch<React.SetStateAction<Cart[]>>;
   cartCount: number;
-  setCartCount: React.Dispatch<React.SetStateAction<number>>;
+  isChange: boolean;
+  setIsChange: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -21,8 +22,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<Cart[]>([]);
   const [cartCount, setCartCount] = useState(0);
+  const [isChange, setIsChange] = useState(false);
 
   const { notifBottomSheetRef } = useNotif();
+
+  // **Gunakan useEffect untuk update cartCount saat cartItems berubah**
+  useEffect(() => {
+    setCartCount(cartItems.length);
+  }, [cartItems]);
 
   const handleAddToCart = (product: Product) => {
     setSelectedProduct(product);
@@ -39,7 +46,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartItems,
         setCartItems,
         cartCount,
-        setCartCount,
+        setIsChange,
+        isChange,
       }}>
       {children}
     </CartContext.Provider>

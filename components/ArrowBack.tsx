@@ -7,7 +7,7 @@ export function BackButton() {
   const navigation = useNavigation();
   return (
     <TouchableOpacity className="mr-4" onPress={() => navigation.goBack()}>
-      <ArrowLeft size={20} className="text-primary font-extrabold" />
+      <ArrowLeft size={20} className="text-white font-extrabold" />
     </TouchableOpacity>
   );
 }

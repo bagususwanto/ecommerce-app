@@ -19,6 +19,7 @@ import { CartProvider } from "~/context/CartContext";
 import { FloatingProductProvider } from "~/context/FloatingProductContext";
 import { NotifProvider } from "~/context/NotifContext";
 import { ScrollProvider } from "~/context/ScrollContext";
+import { HeaderCart } from "~/components/header/Header";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -77,23 +78,9 @@ export default function RootLayout() {
                   <Stack.Screen
                     name="cart"
                     options={{
-                      title: "Cart",
+                      title: "",
                       headerShown: true,
-                      // headerLeft: () => <BackButton />,
-                      // headerRight: () => (
-                      //   <>
-                      //     <TouchableOpacity
-                      //       className="mr-4"
-                      //       onPress={() => {
-                      //         console.log("Add to wishlist");
-                      //       }}>
-                      //       <Heart
-                      //         size={20}
-                      //         className="text-gray-800 font-extrabold"
-                      //       />
-                      //     </TouchableOpacity>
-                      //   </>
-                      // ),
+                      header: () => <HeaderCart />,
                     }}
                   />
                   <Stack.Screen

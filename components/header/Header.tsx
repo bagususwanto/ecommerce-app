@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { useScroll } from "~/context/ScrollContext";
 import Animated, {
   Easing,
@@ -15,6 +15,8 @@ import IconButton from "../IconButton";
 import { Bell, ShoppingCart } from "lucide-react-native";
 import { useCart } from "~/context/CartContext";
 import { useRouter } from "expo-router";
+import { BackButton } from "../ArrowBack";
+import { Text } from "../ui/text";
 
 export function Header() {
   const { scrollY } = useScroll();
@@ -99,6 +101,30 @@ export function HeaderSimple() {
             count={cartCount}
             onPress={() => router.push("/cart")}
           />
+        </View>
+      </View>
+    </View>
+  );
+}
+
+export function HeaderCart() {
+  const router = useRouter();
+  const { isChange, setIsChange } = useCart();
+  return (
+    <View className="bg-primary">
+      <View className="py-4 px-4 mt-8">
+        <View className="flex-row justify-between items-center mt-4">
+          <View className="gap-2 flex-row items-center">
+            <BackButton />
+            <Text className="text-white font-bold text-xl">Cart</Text>
+          </View>
+          <View className="gap-2 flex-row items-center">
+            <TouchableOpacity onPress={() => setIsChange(!isChange)}>
+              <Text className="text-white text-lg">
+                {isChange ? "Done" : "Edit"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

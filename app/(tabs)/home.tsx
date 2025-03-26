@@ -194,6 +194,16 @@ export default function HomeScreen() {
         <LinearGradient
           colors={[
             "#04349c",
+            "#04349c",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
             "transparent",
             "transparent",
             "transparent",

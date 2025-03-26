@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  useEffect,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useState } from "react";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -33,7 +29,7 @@ export const CartBottomSheet = forwardRef<
 
   const { showProduct } = useFloatingProduct();
   const { handleShowNotif } = useNotif();
-  const { bottomSheetRef, setCartItems, setCartCount, cartItems } = useCart();
+  const { bottomSheetRef, setCartItems, cartItems } = useCart();
 
   // Reset quantity saat BottomSheet ditutup
   useEffect(() => {
@@ -65,18 +61,18 @@ export const CartBottomSheet = forwardRef<
     setTimeout(() => {
       handleShowNotif(product);
 
-      setCartCount((prevCount) => {
-        const existingItem = cartItems.find(
-          (item) => item.productNo === product.productNo
-        );
+      // setCartCount((prevCount) => {
+      //   const existingItem = cartItems.find(
+      //     (item) => item.productNo === product.productNo
+      //   );
 
-        if (existingItem) {
-          return prevCount;
-        } else {
-          return prevCount + 1;
-        }
-      });
-    }, 800);
+      //   if (existingItem) {
+      //     return prevCount;
+      //   } else {
+      //     return prevCount + 1;
+      //   }
+      // });
+    }, 100);
   };
 
   return (
@@ -91,7 +87,7 @@ export const CartBottomSheet = forwardRef<
               <ProductUI products={selectedProduct} />
               {/* Quantity Selector */}
               <View className="flex-row items-center justify-between mt-4">
-                <Text className="text-gray text-lg">Quantity:</Text>
+                <Text className="text-black text-lg">Quantity:</Text>
                 <View className="flex-row h-12 items-center gap-4 border border-gray-300 rounded-lg px-4">
                   <QuantitySelector
                     quantity={quantity}
@@ -134,7 +130,7 @@ export const NotifiBottomSheet = forwardRef<
         <BottomSheetView className="p-4 item-center">
           {selectedProduct && (
             <>
-              <Text className="font-bold text-gray text-2xl flex-wrap">
+              <Text className="font-bold text-black text-2xl flex-wrap">
                 Complete Your Shopping
               </Text>
               <View className="flex-row gap-4 mt-4">
@@ -145,12 +141,12 @@ export const NotifiBottomSheet = forwardRef<
                   resizeMode="cover"
                 />
                 <View className="flex flex-col">
-                  <Text className="text-gray text-md flex-wrap">
+                  <Text className="text-black text-md flex-wrap">
                     {selectedProduct.productName}
                   </Text>
                   <View className="flex-row items-center gap-1">
                     <CircleCheck color="green" size={18} />
-                    <Text className="text-gray font-bold text-md flex-wrap">
+                    <Text className="text-black font-bold text-md flex-wrap">
                       Added to the shopping cart
                     </Text>
                   </View>

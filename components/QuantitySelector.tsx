@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  Keyboard,
-} from "react-native";
+import { View, TextInput, Keyboard } from "react-native";
 import IconButton from "./IconButton";
 import { Minus, Plus } from "lucide-react-native";
 
@@ -61,13 +57,12 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
         onPress={decrease}
       />
       <TextInput
-        className="text-md text-center px-3"
+        className="text-md text-center px-3 w-12"
         inputMode="numeric"
         value={inputValue}
         onChangeText={handleChange}
         onBlur={handleBlur}
         cursorColor={"blue"}
-        style={{ minWidth: Math.max(40, inputValue.length * 14) }}
       />
       <IconButton
         className="px-3"
