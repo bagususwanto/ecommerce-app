@@ -19,7 +19,11 @@ import { CartProvider } from "~/context/CartContext";
 import { FloatingProductProvider } from "~/context/FloatingProductContext";
 import { NotifProvider } from "~/context/NotifContext";
 import { ScrollProvider } from "~/context/ScrollContext";
-import { HeaderCart, HeaderSearch } from "~/components/header/Header";
+import {
+  HeaderCart,
+  HeaderProduct,
+  HeaderSearch,
+} from "~/components/header/Header";
 import { SearchProvider } from "~/context/SearchContext";
 
 const LIGHT_THEME: Theme = {
@@ -91,6 +95,14 @@ export default function RootLayout() {
                         title: "",
                         headerShown: true,
                         header: () => <HeaderSearch />,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="product"
+                      options={{
+                        title: "",
+                        headerShown: true,
+                        header: () => <HeaderProduct />,
                       }}
                     />
                     <Stack.Screen

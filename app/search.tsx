@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -10,14 +10,21 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Trash2 } from "lucide-react-native";
 import { useSearch } from "~/context/SearchContext";
+import { useRouter } from "expo-router";
+import { Product } from "~/types/product";
+import products from "~/dummy/product";
 
 export default function SearchScreen() {
   const {
     recentSearches,
     setRecentSearches,
     setSearchTerm,
+    suggestions,
+    setSuggestions,
+    setFilteredProducts,
     RECENT_SEARCH_KEY,
   } = useSearch();
+  const router = useRouter();
 
   useEffect(() => {
     loadRecentSearches();
@@ -48,45 +55,84 @@ export default function SearchScreen() {
     );
   };
 
+  const saveRecentSearch = async (term: string) => {
+    if (!term.trim() || recentSearches.includes(term)) return;
+
+    const updatedSearches = [term, ...recentSearches].slice(0, 10); // Maks 10 recent search
+    setRecentSearches(updatedSearches);
+    await AsyncStorage.setItem(
+      RECENT_SEARCH_KEY,
+      JSON.stringify(updatedSearches)
+    );
+  };
+
+  const handleSearch = (product: Product) => {
+    setFilteredProducts([product]);
+    saveRecentSearch(product.productName);
+    setSearchTerm(product.productName);
+    setSuggestions([]);
+    Keyboard.dismiss();
+    router.push("/product");
+  };
+
   return (
     <View className="flex-1 p-4">
-      {/* Recent Searches */}
-      <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-lg font-semibold">Recent Searches</Text>
-        {recentSearches.length > 0 && (
-          <TouchableOpacity onPress={clearAllSearches}>
-            <Text className="text-red-700">Clear All</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {recentSearches.length > 0 && suggestions.length === 0 && (
+        <>
+          <View className="flex-row justify-between items-center mb-2">
+            <Text className="text-lg font-semibold">Recent Searches</Text>
+            <TouchableOpacity onPress={clearAllSearches}>
+              <Text className="text-red-700">Clear All</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={recentSearches}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                className="p-3 border-b border-gray-300 flex-row justify-between items-center"
+                onPress={() => {
+                  setSearchTerm(item);
 
-      {recentSearches.length > 0 ? (
+                  const filteredProducts = products.filter((p) =>
+                    p.productName.toLowerCase().includes(item.toLowerCase())
+                  );
+
+                  setFilteredProducts(filteredProducts);
+                  router.push("/product");
+                }}>
+                <Text className="text-base">{item}</Text>
+                <TouchableOpacity
+                  onPress={async () => {
+                    const filteredSearches = recentSearches.filter(
+                      (s) => s !== item
+                    );
+                    setRecentSearches(filteredSearches);
+                    await AsyncStorage.setItem(
+                      RECENT_SEARCH_KEY,
+                      JSON.stringify(filteredSearches)
+                    );
+                  }}>
+                  <Trash2 size={18} color="gray" />
+                </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+          />
+        </>
+      )}
+
+      {suggestions.length > 0 && (
         <FlatList
-          data={recentSearches}
-          keyExtractor={(item) => item}
+          data={suggestions}
+          keyExtractor={(item) => item.productName}
           renderItem={({ item }) => (
             <TouchableOpacity
-              className="p-3 border-b border-gray-300 flex-row justify-between items-center"
-              onPress={() => setSearchTerm(item)}>
-              <Text className="text-base">{item}</Text>
-              <TouchableOpacity
-                onPress={async () => {
-                  const filteredSearches = recentSearches.filter(
-                    (s) => s !== item
-                  );
-                  setRecentSearches(filteredSearches);
-                  await AsyncStorage.setItem(
-                    RECENT_SEARCH_KEY,
-                    JSON.stringify(filteredSearches)
-                  );
-                }}>
-                <Trash2 size={18} color="gray" />
-              </TouchableOpacity>
+              className="p-3 border-b border-gray-300"
+              onPress={() => handleSearch(item)}>
+              <Text className="text-base">{item.productName}</Text>
             </TouchableOpacity>
           )}
         />
-      ) : (
-        <Text className="text-gray-500">No recent searches</Text>
       )}
     </View>
   );

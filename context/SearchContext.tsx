@@ -1,11 +1,18 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
+import { TextInput } from "react-native";
+import { Product } from "~/types/product";
 
 type SearchContextType = {
   recentSearches: string[];
   setRecentSearches: React.Dispatch<React.SetStateAction<string[]>>;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  suggestions: Product[];
+  setSuggestions: React.Dispatch<React.SetStateAction<Product[]>>;
+  filteredProducts: Product[];
+  setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   RECENT_SEARCH_KEY: string;
+  searchBoxRef: React.RefObject<TextInput>;
 };
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -13,6 +20,9 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const searchBoxRef = useRef<TextInput>(null);
 
   const RECENT_SEARCH_KEY = "recentSearches";
 
@@ -23,7 +33,12 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         setRecentSearches,
         searchTerm,
         setSearchTerm,
+        suggestions,
+        setSuggestions,
+        filteredProducts,
+        setFilteredProducts,
         RECENT_SEARCH_KEY,
+        searchBoxRef,
       }}>
       {children}
     </SearchContext.Provider>

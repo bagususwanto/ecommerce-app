@@ -4,6 +4,7 @@ import { cn } from "~/lib/utils";
 import { CircleX, LucideIcon } from "lucide-react-native";
 import IconButton from "../IconButton";
 import { useSearch } from "~/context/SearchContext";
+import { useRouter } from "expo-router";
 
 const Input = React.forwardRef<
   React.ElementRef<typeof TextInput>,
@@ -18,6 +19,7 @@ const Input = React.forwardRef<
     ref
   ) => {
     const { searchTerm, setSearchTerm } = useSearch();
+    const router = useRouter();
     return (
       <View
         className={cn(
@@ -45,7 +47,10 @@ const Input = React.forwardRef<
             color="white"
             fill={true}
             fillColor="gray"
-            onPress={() => setSearchTerm("")}
+            onPress={() => {
+              setSearchTerm("");
+              router.push("/search");
+            }}
           />
         )}
       </View>

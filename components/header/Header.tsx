@@ -17,6 +17,7 @@ import { useCart } from "~/context/CartContext";
 import { useRouter } from "expo-router";
 import { BackButton } from "../ArrowBack";
 import { Text } from "../ui/text";
+import { useSearch } from "~/context/SearchContext";
 
 export function Header() {
   const { scrollY } = useScroll();
@@ -136,7 +137,8 @@ export function HeaderCart() {
 }
 
 export function HeaderSearch() {
-  const searchBoxRef = useRef<TextInput>(null); // Buat ref untuk input
+  const { searchBoxRef } = useSearch();
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
@@ -148,9 +150,33 @@ export function HeaderSearch() {
     <View className="bg-primary">
       <View className="py-4 px-4 mt-8">
         <View className="flex-row justify-between items-center mt-4">
-          <BackButton />
+          <BackButton onPress={() => router.push("/home")} />
           <View className="gap-2 flex-1 items-center">
             <SearchBox ref={searchBoxRef} placeholder="Search product..." />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+export function HeaderProduct() {
+  const router = useRouter();
+
+  return (
+    <View className="bg-primary">
+      <View className="py-4 px-4 mt-8">
+        <View className="flex-row justify-between items-center mt-4">
+          <BackButton onPress={() => router.push("/search")} />
+          <View className="gap-2 flex-row items-center">
+            <SearchBox
+              className="max-w-[87%]"
+              placeholder="Search product..."
+              toSearch={() => {
+                router.push("/search");
+              }}
+            />
+            <IconButton icon={ShoppingCart} />
           </View>
         </View>
       </View>

@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
-import { forwardRef, useState } from "react";
+import { forwardRef } from "react";
 import { Keyboard, TextInput } from "react-native";
 import { Input } from "~/components/ui/input";
 import { useSearch } from "~/context/SearchContext";
+import products from "~/dummy/product";
 import { cn } from "~/lib/utils";
 
 interface SearchBoxProps {
@@ -19,8 +21,11 @@ export const SearchBox = forwardRef<TextInput, SearchBoxProps>(
       setRecentSearches,
       searchTerm,
       setSearchTerm,
+      setSuggestions,
+      setFilteredProducts,
       RECENT_SEARCH_KEY,
     } = useSearch();
+    const router = useRouter();
 
     const saveRecentSearch = async (term: string) => {
       if (!term.trim() || recentSearches.includes(term)) return;
@@ -33,26 +38,58 @@ export const SearchBox = forwardRef<TextInput, SearchBoxProps>(
       );
     };
 
-    const handleSearch = () => {
-      if (searchTerm.trim() === "") return;
-      saveRecentSearch(searchTerm);
-      Keyboard.dismiss(); // Menutup keyboard
+    const handleSearch = (text: string) => {
+      if (text.trim() === "") return;
+      saveRecentSearch(text);
+      setSearchTerm(text);
+      setSuggestions([]);
+      Keyboard.dismiss();
+      toSearch?.();
+      router.push("/product");
+    };
+
+    // Update suggestions berdasarkan input
+    const handleInputChange = (text: string) => {
+      setSearchTerm(text);
+
+      if (text.trim() === "") {
+        setSuggestions([]);
+      } else {
+        const filteredSuggestions = products
+          .filter(
+            (item) =>
+              item.productName.toLowerCase().includes(text.toLowerCase()) ||
+              item.productNo.toLowerCase().includes(text.toLowerCase())
+          )
+          .slice(0, 10);
+
+        const filteredProducts = products.filter(
+          (item) =>
+            item.productName.toLowerCase().includes(text.toLowerCase()) ||
+            item.productNo.toLowerCase().includes(text.toLowerCase())
+        );
+
+        setFilteredProducts(filteredProducts);
+        setSuggestions(filteredSuggestions);
+      }
     };
 
     return (
-      <Input
-        ref={ref}
-        className={cn("", className)}
-        placeholder={placeholder}
-        returnKeyType="search"
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-        onSubmitEditing={handleSearch}
-        onPress={toSearch}
-        aria-labelledby="inputLabel"
-        aria-errormessage="inputError"
-        icon={Search}
-      />
+      <>
+        <Input
+          ref={ref}
+          className={cn("", className)}
+          placeholder={placeholder}
+          returnKeyType="search"
+          value={searchTerm}
+          onChangeText={handleInputChange}
+          onSubmitEditing={() => handleSearch(searchTerm)}
+          onPress={toSearch}
+          aria-labelledby="inputLabel"
+          aria-errormessage="inputError"
+          icon={Search}
+        />
+      </>
     );
   }
 );
