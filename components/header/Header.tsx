@@ -1,4 +1,4 @@
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { useScroll } from "~/context/ScrollContext";
 import Animated, {
   Easing,
@@ -162,6 +162,7 @@ export function HeaderSearch() {
 
 export function HeaderProduct() {
   const router = useRouter();
+  const { cartCount } = useCart();
 
   return (
     <View className="bg-primary">
@@ -176,7 +177,12 @@ export function HeaderProduct() {
                 router.push("/search");
               }}
             />
-            <IconButton icon={ShoppingCart} />
+            <IconButton
+              icon={ShoppingCart}
+              counting={true}
+              count={cartCount}
+              onPress={() => router.push("/cart")}
+            />
           </View>
         </View>
       </View>

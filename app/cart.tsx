@@ -1,10 +1,23 @@
 import { Heart, Trash2 } from "lucide-react-native";
-import { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
 import Toast, { ToastConfigParams } from "react-native-toast-message";
 import IconButton from "~/components/IconButton";
 import { ProductUI } from "~/components/ProductUI";
 import QuantitySelector from "~/components/QuantitySelector";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -17,7 +30,12 @@ export default function CartScreen() {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const { isChange } = useCart();
+  const { isChange, setIsChange } = useCart();
+
+  useEffect(() => {
+    setIsChange(false);
+    setCheckedItems({});
+  }, []);
 
   const isAllChecked =
     cartItems.length > 0 &&
@@ -94,6 +112,19 @@ export default function CartScreen() {
     Toast.hide();
   };
 
+  const handleDeleteSelection = (selectedItems: Cart[]) => {
+    const itemsToDelete = selectedItems.map((item) => item.productNo);
+    setCartItems((prevCart) =>
+      prevCart.filter((item) => !itemsToDelete.includes(item.productNo))
+    );
+
+    Toast.show({
+      type: "success",
+      text1: `${selectedItems.length} Items deleted`,
+      position: "bottom",
+    });
+  };
+
   const toastConfig = {
     success: ({ text1, text2, props }: ToastConfigParams<any>) => (
       <View className="bg-white p-4 rounded-lg flex-row justify-between items-center shadow-lg">
@@ -104,6 +135,16 @@ export default function CartScreen() {
         <TouchableOpacity onPress={props.onUndo} className="ml-4">
           <Text className="text-primary font-bold">Undo</Text>
         </TouchableOpacity>
+      </View>
+    ),
+  };
+
+  const toastConfigSuccess = {
+    success: ({ text1 }: ToastConfigParams<any>) => (
+      <View className="bg-white p-4 rounded-lg flex-row justify-between items-center shadow-lg">
+        <View>
+          <Text className="font-bold">{text1}</Text>
+        </View>
       </View>
     ),
   };
@@ -174,17 +215,41 @@ export default function CartScreen() {
               <Text className="text-gray-700">Select All</Text>
             </View>
             {isChange ? (
-              <Button
-                variant={"outline"}
-                className=" py-3 rounded-lg items-center"
-                disabled={selectedItems.length === 0}
-                onPress={() => console.log("Proceed to Delete", selectedItems)}>
-                <View className="flex-row items-center gap-2">
-                  <Text className="text-primary text-lg font-bold">
-                    Delete ({selectedItems.length} items)
-                  </Text>
-                </View>
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className=" py-3 rounded-lg items-center"
+                    disabled={selectedItems.length === 0}>
+                    <View className="flex-row items-center gap-2">
+                      <Text className="text-primary text-lg font-bold">
+                        Delete ({selectedItems.length} items)
+                      </Text>
+                    </View>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Delete {selectedItems.length} items?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the selected items from your cart.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex-row justify-center">
+                    <AlertDialogCancel className="flex-grow">
+                      <Text className="text-primary">Cancel</Text>
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onPress={() => handleDeleteSelection(selectedItems)}
+                      className="flex-grow">
+                      <Text>Delete</Text>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             ) : (
               <Button
                 className="bg-primary py-3 rounded-lg items-center"
@@ -203,6 +268,7 @@ export default function CartScreen() {
         </View>
       )}
       <Toast config={toastConfig} />
+      <Toast config={toastConfigSuccess} />
     </View>
   );
 }

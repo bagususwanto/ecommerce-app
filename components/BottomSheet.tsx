@@ -29,7 +29,7 @@ export const CartBottomSheet = forwardRef<
 
   const { showProduct } = useFloatingProduct();
   const { handleShowNotif } = useNotif();
-  const { bottomSheetRef, setCartItems, cartItems } = useCart();
+  const { bottomSheetRef, setCartItems } = useCart();
 
   // Reset quantity saat BottomSheet ditutup
   useEffect(() => {

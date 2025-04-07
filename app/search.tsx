@@ -45,7 +45,6 @@ export default function SearchScreen() {
         { text: "Cancel", style: "cancel" },
         {
           text: "Clear",
-          style: "destructive",
           onPress: async () => {
             setRecentSearches([]);
             await AsyncStorage.removeItem(RECENT_SEARCH_KEY);
