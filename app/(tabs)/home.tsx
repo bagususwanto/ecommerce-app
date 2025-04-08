@@ -12,7 +12,7 @@ import { ProductList } from "~/components/ProductCard";
 import { useCart } from "~/context/CartContext";
 import { ScrollView } from "react-native";
 import { useNotif } from "~/context/NotifContext";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useScroll } from "~/context/ScrollContext";
 import { TouchableOpacity } from "react-native";
 import { SearchBox } from "~/components/header/ui/searchbox";
@@ -34,13 +34,16 @@ export default function HomeScreen() {
   const { notifBottomSheetRef } = useNotif();
   const { handleScroll, setIsScrolled } = useScroll();
   const router = useRouter();
+  const scrollHomeRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     setIsScrolled(false);
+    scrollHomeRef.current?.scrollTo({ y: 0, animated: false }); // Reset scroll
   }, []);
 
   return (
     <ScrollView
+      ref={scrollHomeRef}
       onScroll={handleScroll}
       scrollEventThrottle={16}
       keyboardShouldPersistTaps="handled"

@@ -54,6 +54,10 @@ export function Header() {
     ),
   }));
 
+  useEffect(() => {
+    scrollY.value = 0;
+  }, []);
+
   return (
     <Animated.View
       style={headerAnimatedStyle}
@@ -126,7 +130,7 @@ export function HeaderCart() {
           <View className="gap-2 flex-row items-center">
             <TouchableOpacity onPress={() => setIsChange(!isChange)}>
               <Text className="text-white text-lg">
-                {isChange ? "Done" : "Edit"}
+                {isChange ? "Done" : "Change"}
               </Text>
             </TouchableOpacity>
           </View>
