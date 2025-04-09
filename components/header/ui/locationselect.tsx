@@ -46,7 +46,7 @@ export function LocationSelect() {
 
   return (
     <View>
-      <Text className="text-white text-md">Location</Text>
+      <Text className="text-white font-normal text-md">Location</Text>
       <Select
         defaultValue={selectedLocation}
         onValueChange={(option) => {

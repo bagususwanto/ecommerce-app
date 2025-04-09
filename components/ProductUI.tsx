@@ -26,10 +26,10 @@ export function ProductUI({ products, imageClassName }: ProductUIProps) {
           <Text className="font-bold text-black text-lg flex-wrap">
             {products.productName}
           </Text>
-          <Text className="text-black text-md flex-wrap">
+          <Text className="text-black font-light text-md flex-wrap">
             {products.productNo}
           </Text>
-          <Text className="text-black text-sm">
+          <Text className="text-black font-normal text-sm">
             Min. Order: {products.minOrder} (PCS)
           </Text>
         </View>

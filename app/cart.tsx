@@ -1,6 +1,7 @@
+import { useRouter } from "expo-router";
 import { Heart, Trash2 } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import Toast, { ToastConfigParams } from "react-native-toast-message";
 import IconButton from "~/components/IconButton";
 import { ProductUI } from "~/components/ProductUI";
@@ -13,8 +14,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogOverlay,
-  AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
@@ -23,6 +22,7 @@ import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Text } from "~/components/ui/text";
 import { useCart } from "~/context/CartContext";
+import { useCheckout } from "~/context/CheckoutContext";
 import { Cart } from "~/types/cart";
 
 export default function CartScreen() {
@@ -31,6 +31,8 @@ export default function CartScreen() {
     {}
   );
   const { isChange, setIsChange } = useCart();
+  const router = useRouter();
+  const { setCheckoutItems } = useCheckout();
 
   useEffect(() => {
     setIsChange(false);
@@ -150,11 +152,11 @@ export default function CartScreen() {
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-gray-50">
       <ScrollView
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: 100 }} // Sesuaikan padding agar tidak tertutup tombol checkout
+        contentContainerStyle={{ paddingBottom: 90 }} // Sesuaikan padding agar tidak tertutup tombol checkout
         showsVerticalScrollIndicator={false}>
         <View className="flex-1 items-center">
           {cartItems.length === 0 ? (
@@ -254,9 +256,10 @@ export default function CartScreen() {
               <Button
                 className="bg-primary py-3 rounded-lg items-center"
                 disabled={selectedItems.length === 0}
-                onPress={() =>
-                  console.log("Proceed to Checkout", selectedItems)
-                }>
+                onPress={() => {
+                  setCheckoutItems(selectedItems);
+                  router.push("/checkout");
+                }}>
                 <View className="flex-row items-center gap-2">
                   <Text className="text-white text-lg font-bold">
                     Checkout ({selectedItems.length} items)

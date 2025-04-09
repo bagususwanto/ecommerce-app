@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { SearchBox } from "./ui/searchbox";
-import { useEffect, useRef, useState } from "react";
+import { useEffect,  useState } from "react";
 import IconButton from "../IconButton";
 import { Bell, ShoppingCart } from "lucide-react-native";
 import { useCart } from "~/context/CartContext";
@@ -187,6 +187,25 @@ export function HeaderProduct() {
               count={cartCount}
               onPress={() => router.push("/cart")}
             />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+interface HeaderMinimalProps {
+  screen: string;
+}
+
+export function HeaderMinimal({ screen }: HeaderMinimalProps) {
+  return (
+    <View className="bg-primary">
+      <View className="py-4 px-4 mt-8">
+        <View className="flex-row justify-between items-center mt-4">
+          <View className="gap-2 flex-row items-center">
+            <BackButton />
+            <Text className="text-white font-bold text-xl">{screen}</Text>
           </View>
         </View>
       </View>

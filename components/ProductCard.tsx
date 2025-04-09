@@ -1,4 +1,4 @@
-import {  Dimensions, View, Image } from "react-native";
+import { Dimensions, View, Image } from "react-native";
 import { Heart, Plus } from "lucide-react-native";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -38,13 +38,13 @@ export const ProductCard = ({
       </View>
       <View className="mb-4 flex-1">
         <Text className="font-bold text-black text-lg">{productName}</Text>
-        <Text className="text-black text-md">{productNo}</Text>
+        <Text className="text-black font-normal text-md">{productNo}</Text>
       </View>
       <View className="flex-row justify-between items-center">
         <Button onPress={onAddToCart} size={"sm"}>
           <View className="flex-row items-center gap-2">
             <Plus color="white" size={18} />
-            <Text>Cart</Text>
+            <Text className="font-bold">Cart</Text>
           </View>
         </Button>
         <IconButton

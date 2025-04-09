@@ -15,6 +15,8 @@ import { useCart } from "~/context/CartContext";
 import { ProductUI } from "./ProductUI";
 import { useRouter } from "expo-router";
 import QuantitySelector from "./QuantitySelector";
+import { Textarea } from "./ui/textarea";
+import { useCheckout } from "~/context/CheckoutContext";
 
 interface CartBottomSheetProps {
   selectedProduct: Product | null;
@@ -91,7 +93,9 @@ export const CartBottomSheet = forwardRef<
                 <ProductUI products={selectedProduct} />
                 {/* Quantity Selector */}
                 <View className="flex-row items-center justify-between mt-4">
-                  <Text className="text-black text-lg">Quantity:</Text>
+                  <Text className="text-black font-normal text-lg">
+                    Quantity:
+                  </Text>
                   <View className="flex-row h-12 items-center gap-4 border border-gray-300 rounded-lg px-4">
                     <QuantitySelector
                       quantity={quantity}
@@ -104,7 +108,7 @@ export const CartBottomSheet = forwardRef<
                   onPress={() => handleAddToCart(selectedProduct)}>
                   <View className="flex-row items-center gap-2">
                     <Plus color="white" size={18} />
-                    <Text>Shopping Cart</Text>
+                    <Text className="font-bold">Shopping Cart</Text>
                   </View>
                 </Button>
               </>
@@ -135,7 +139,7 @@ export const NotifiBottomSheet = forwardRef<
         <BottomSheetView className="p-4 item-center">
           {selectedProduct && (
             <>
-              <Text className="font-bold text-black text-2xl flex-wrap">
+              <Text className="font-bold text-black text-lg flex-wrap">
                 Complete Your Shopping
               </Text>
               <View className="flex-row gap-4 mt-4">
@@ -146,12 +150,12 @@ export const NotifiBottomSheet = forwardRef<
                   resizeMode="cover"
                 />
                 <View className="flex flex-col">
-                  <Text className="text-black text-md flex-wrap">
+                  <Text className="text-black font-normal text-md flex-wrap">
                     {selectedProduct.productName}
                   </Text>
                   <View className="flex-row items-center gap-1">
                     <CircleCheck color="green" size={18} />
-                    <Text className="text-black font-bold text-md flex-wrap">
+                    <Text className="text-black font-medium text-md flex-wrap">
                       Added to the shopping cart
                     </Text>
                   </View>
@@ -164,11 +168,49 @@ export const NotifiBottomSheet = forwardRef<
                   route.push("/cart");
                 }}>
                 <View className="flex-row items-center">
-                  <Text>Check Shopping Cart</Text>
+                  <Text className="font-bold">Check Shopping Cart</Text>
                 </View>
               </Button>
             </>
           )}
+        </BottomSheetView>
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
+  );
+});
+
+export const NoteBottomSheet = forwardRef((_, ref) => {
+  const { noteBottomSheetRef, setNote } = useCheckout();
+  const [value, setValue] = useState("");
+
+  const handleConfirm = () => {
+    // Close the bottom sheet after confirmation
+    noteBottomSheetRef.current?.close();
+    setNote(value);
+  };
+
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal
+        ref={noteBottomSheetRef}
+        style={{ borderColor: "#e5e7eb", borderWidth: 1, borderRadius: 10 }}>
+        <BottomSheetView className="p-4 items-center">
+          <Text className="font-bold text-black text-xl flex-wrap">
+            Add a note
+          </Text>
+          <View className="flex-row mt-4">
+            <Textarea
+              autoFocus={true}
+              placeholder="Leave a message"
+              value={value}
+              onChangeText={setValue}
+            />
+          </View>
+          <Button className="my-4" onPress={handleConfirm}>
+            <View className="flex-row items-center">
+              <Text className="font-bold">Confirm</Text>
+            </View>
+          </Button>
         </BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>

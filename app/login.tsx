@@ -10,7 +10,7 @@ export default function LoginScreen() {
     <View className="flex-1 justify-center items-center">
       <Text>Login Screen</Text>
       <Button onPress={() => router.replace("/(tabs)/home")}>
-        <Text>Go to Home</Text>
+        <Text className="font-bold">Go to Home</Text>
       </Button>
     </View>
   );
