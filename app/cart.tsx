@@ -23,6 +23,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Text } from "~/components/ui/text";
 import { useCart } from "~/context/CartContext";
 import { useCheckout } from "~/context/CheckoutContext";
+import { useSearch } from "~/context/SearchContext";
 import { Cart } from "~/types/cart";
 
 export default function CartScreen() {
@@ -33,10 +34,12 @@ export default function CartScreen() {
   const { isChange, setIsChange } = useCart();
   const router = useRouter();
   const { setCheckoutItems } = useCheckout();
+  const {setSearchTerm} = useSearch();
 
   useEffect(() => {
     setIsChange(false);
     setCheckedItems({});
+    setSearchTerm('');
   }, []);
 
   const isAllChecked =

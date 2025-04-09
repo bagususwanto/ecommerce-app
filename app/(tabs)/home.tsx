@@ -86,16 +86,16 @@ export default function HomeScreen() {
             <View className="flex-row items-center mt-4">
               <SearchBox
                 placeholder="Search product..."
-                className="flex-1 border border-gray-400  max-w-[95%]"
+                className="flex-1 border border-gray-400"
                 toSearch={() => {
                   router.push("/search");
                 }}
               />
 
               {/* Wishlist Button */}
-              <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2 shadow-md">
+              {/* <TouchableOpacity className="ml-4 border-2 border-white rounded-full p-2 shadow-md">
                 <Heart color="white" size={16} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <MyCarousel />

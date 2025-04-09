@@ -75,7 +75,7 @@ export default function SearchScreen() {
   };
 
   return (
-    <View className="flex-1 p-4">
+    <View className="flex-1 p-4 bg-gray-50">
       {recentSearches.length > 0 && suggestions.length === 0 && (
         <>
           <View className="flex-row justify-between items-center mb-2">
