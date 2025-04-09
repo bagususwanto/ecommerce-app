@@ -19,7 +19,7 @@ export default function Screen() {
       <ActivityIndicator size="large" color="white" />
       <Image
         source={require("../assets/brands/twiis_secondary.png")}
-        className="w-full h-28"
+        className="w-56 h-28"
         resizeMode="contain"
       />
     </View>
