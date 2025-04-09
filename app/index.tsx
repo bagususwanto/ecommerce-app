@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Image, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 
@@ -17,7 +17,11 @@ export default function Screen() {
   return (
     <View className="flex-1 items-center justify-center bg-primary">
       <ActivityIndicator size="large" color="white" />
-      <Text className="text-white text-2xl">Brand</Text>
+      <Image
+        source={require("../assets/brands/twiis_secondary.png")}
+        className="w-full h-28"
+        resizeMode="contain"
+      />
     </View>
   );
 }
