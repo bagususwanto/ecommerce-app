@@ -27,12 +27,12 @@ export default function LoginScreen() {
           <Input
             placeholder="Username"
             placeholderClassName="text-black"
-            className="px-4 py-1 rounded-lg shadow-lg shadow-primary"
+            className="px-4 py-1 rounded-lg shadow-lg shadow-slate-500"
           />
           <Input
             placeholder="Password"
             secureTextEntry
-            className="px-4 py-1 rounded-lg shadow-lg shadow-primary"
+            className="px-4 py-1 rounded-lg shadow-lg shadow-slate-500"
           />
         </View>
 
