@@ -45,8 +45,7 @@ const Input = React.forwardRef<
             icon={CircleX}
             size={16}
             color="white"
-            fill={true}
-            fillColor="gray"
+            fill={"gray"}
             onPress={() => {
               setSearchTerm("");
               router.push("/search");

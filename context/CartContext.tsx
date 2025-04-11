@@ -23,6 +23,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<Cart[]>([]);
   const [cartCount, setCartCount] = useState(0);
   const [isChange, setIsChange] = useState(false);
+  const { setNotifProps } = useNotif();
 
   const { notifBottomSheetRef } = useNotif();
 
@@ -35,6 +36,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setSelectedProduct(product);
     notifBottomSheetRef.current?.close();
     bottomSheetRef.current?.present();
+    setNotifProps({
+      title: "Complete your shopping",
+      description: "Added to the shopping cart",
+      buttonText: "Go to Cart",
+      routeName: "/cart",
+    })
   };
 
   return (

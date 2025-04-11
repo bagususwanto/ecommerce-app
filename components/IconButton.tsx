@@ -9,7 +9,7 @@ type IconButtonProps = {
   className?: string;
   size?: number;
   color?: string;
-  fill?: boolean;
+  fill?: string;
   fillColor?: string;
 };
 
@@ -21,8 +21,7 @@ const IconButton = ({
   className = "",
   size = 24,
   color = "white",
-  fill = false,
-  fillColor = "white",
+  fill,
 }: IconButtonProps) => {
   return (
     <TouchableOpacity className={cn("", className)} onPress={onPress}>
@@ -31,7 +30,7 @@ const IconButton = ({
           <Text className="text-white text-xs font-bold">{count}</Text>
         </View>
       )}
-      <Icon color={color} fill={fill ? fillColor : "none"} size={size} />
+      <Icon color={color} fill={fill ? fill : 'none'} size={size} />
     </TouchableOpacity>
   );
 };

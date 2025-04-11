@@ -125,7 +125,7 @@ export const NotifiBottomSheet = forwardRef<
   CartBottomSheetProps
 >(({ selectedProduct }, ref) => {
   const route = useRouter();
-  const { notifBottomSheetRef } = useNotif();
+  const { notifBottomSheetRef, notifProps } = useNotif();
 
   // const handleClose = () => {
   //   (ref as MutableRefObject<BottomSheetModal | null>)?.current?.close();
@@ -140,7 +140,7 @@ export const NotifiBottomSheet = forwardRef<
           {selectedProduct && (
             <>
               <Text className="font-bold text-black text-lg flex-wrap">
-                Complete Your Shopping
+                {notifProps.title}
               </Text>
               <View className="flex-row gap-4 mt-4">
                 <Image
@@ -156,7 +156,7 @@ export const NotifiBottomSheet = forwardRef<
                   <View className="flex-row items-center gap-1">
                     <CircleCheck color="green" size={18} />
                     <Text className="text-black font-medium text-md flex-wrap">
-                      Added to the shopping cart
+                      {notifProps.description}
                     </Text>
                   </View>
                 </View>
@@ -165,10 +165,14 @@ export const NotifiBottomSheet = forwardRef<
                 className="mt-4"
                 onPress={() => {
                   notifBottomSheetRef.current?.close();
-                  route.push("/cart");
+                  if (notifProps.routeName) {
+                    route.push(notifProps.routeName);
+                  } else {
+                    route.push("/cart");
+                  }
                 }}>
                 <View className="flex-row items-center">
-                  <Text className="font-bold">Check Shopping Cart</Text>
+                  <Text className="font-bold">{notifProps.buttonText}</Text>
                 </View>
               </Button>
             </>

@@ -27,6 +27,7 @@ import {
 } from "~/components/header/Header";
 import { SearchProvider } from "~/context/SearchContext";
 import { CheckoutProvider } from "~/context/CheckoutContext";
+import { WishlistProvider } from "~/context/WishlistContext";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -74,54 +75,56 @@ export default function RootLayout() {
               <FloatingProductProvider>
                 <ScrollProvider>
                   <CheckoutProvider>
-                    {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
-                    <StatusBar style={"light"} />
-                    <Stack screenOptions={{ headerShown: false }}>
-                      <Stack.Screen
-                        name="login"
-                        options={{
-                          title: "Login",
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="cart"
-                        options={{
-                          title: "",
-                          headerShown: true,
-                          header: () => <HeaderCart />,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="search"
-                        options={{
-                          title: "",
-                          headerShown: true,
-                          header: () => <HeaderSearch />,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="product"
-                        options={{
-                          title: "",
-                          headerShown: true,
-                          header: () => <HeaderProduct />,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="checkout"
-                        options={{
-                          title: "",
-                          headerShown: true,
-                          header: () => <HeaderMinimal screen="Checkout" />,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
-                    </Stack>
-                    <PortalHost />
+                    <WishlistProvider>
+                      {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
+                      <StatusBar style={"light"} />
+                      <Stack screenOptions={{ headerShown: false }}>
+                        <Stack.Screen
+                          name="login"
+                          options={{
+                            title: "Login",
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="cart"
+                          options={{
+                            title: "",
+                            headerShown: true,
+                            header: () => <HeaderCart />,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="search"
+                          options={{
+                            title: "",
+                            headerShown: true,
+                            header: () => <HeaderSearch />,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="product"
+                          options={{
+                            title: "",
+                            headerShown: true,
+                            header: () => <HeaderProduct />,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="checkout"
+                          options={{
+                            title: "",
+                            headerShown: true,
+                            header: () => <HeaderMinimal screen="Checkout" />,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(tabs)"
+                          options={{ headerShown: false }}
+                        />
+                      </Stack>
+                      <PortalHost />
+                    </WishlistProvider>
                   </CheckoutProvider>
                 </ScrollProvider>
               </FloatingProductProvider>

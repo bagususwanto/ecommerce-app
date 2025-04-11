@@ -5,24 +5,60 @@ import { Card } from "./ui/card";
 import { Text } from "./ui/text";
 import { Product } from "~/types/product";
 import IconButton from "./IconButton";
+import { useWishlist } from "~/context/WishlistContext";
+import { useNotif } from "~/context/NotifContext";
+import { useCart } from "~/context/CartContext";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width / 2 - 16;
 
 type ProductCardProps = {
-  productNo: string;
-  productName: string;
-  imageUrl: string;
+  productCard: Product;
   onAddToCart: () => void;
 };
 
-export const ProductCard = ({
-  productNo,
-  productName,
-  imageUrl,
-  onAddToCart,
-}: ProductCardProps) => {
-  const onWishlist = () => console.log("Add to wishlist");
+export const ProductCard = ({ productCard, onAddToCart }: ProductCardProps) => {
+  const { wishlistItems, setWishlistItems } = useWishlist();
+  const { setNotifProps, notifBottomSheetRef } = useNotif();
+  const { setSelectedWishlist } = useWishlist();
+
+  const isWishlist = wishlistItems.some(
+    (item) => item.productNo === productCard.productNo
+  );
+
+  const onWishlist = () => {
+    const updatedWishlistItems = isWishlist
+      ? wishlistItems.filter((item) => item.productNo !== productCard.productNo)
+      : [
+          ...wishlistItems,
+          {
+            productNo: productCard.productNo,
+            productName: productCard.productName,
+            imageUrl: productCard.imageUrl,
+            minOrder: productCard.minOrder,
+          },
+        ];
+
+    setWishlistItems(updatedWishlistItems);
+
+    if (!isWishlist) {
+      setSelectedWishlist({
+        productNo: productCard.productNo,
+        productName: productCard.productName,
+        imageUrl: productCard.imageUrl,
+        minOrder: productCard.minOrder,
+      });
+
+      setNotifProps({
+        title: "Product added to wishlist",
+        description: "Product has been added to your wishlist",
+        buttonText: "Go to wishlist",
+        routeName: "/wishlist",
+      });
+
+      notifBottomSheetRef.current?.present();
+    }
+  };
 
   return (
     <Card
@@ -30,15 +66,19 @@ export const ProductCard = ({
       style={{ width: CARD_WIDTH, minHeight: 300 }}>
       <View className="flex items-center justify-center mb-4">
         <Image
-          source={{ uri: imageUrl }}
+          source={{ uri: productCard.imageUrl }}
           className="rounded-md w-full h-40"
-          alt={productNo}
+          alt={productCard.productNo}
           resizeMode="cover"
         />
       </View>
       <View className="mb-4 flex-1">
-        <Text className="font-bold text-black text-lg">{productName}</Text>
-        <Text className="text-black font-normal text-md">{productNo}</Text>
+        <Text className="font-bold text-black text-lg">
+          {productCard.productName}
+        </Text>
+        <Text className="text-black font-normal text-md">
+          {productCard.productNo}
+        </Text>
       </View>
       <View className="flex-row justify-between items-center">
         <Button onPress={onAddToCart} size={"sm"}>
@@ -50,8 +90,9 @@ export const ProductCard = ({
         <IconButton
           icon={Heart}
           size={20}
-          color={"gray"}
+          color={isWishlist ? "red" : "gray"}
           onPress={onWishlist}
+          fill={isWishlist ? "red" : "transparent"}
         />
       </View>
     </Card>
@@ -69,9 +110,7 @@ export const ProductList = ({ products, onAddToCart }: ProductListProps) => {
       {products.map((product) => (
         <View key={product.productNo} style={{ width: CARD_WIDTH }}>
           <ProductCard
-            productNo={product.productNo}
-            productName={product.productName}
-            imageUrl={product.imageUrl}
+            productCard={product}
             onAddToCart={() => onAddToCart(product)}
           />
         </View>
