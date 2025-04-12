@@ -28,6 +28,8 @@ import {
 import { SearchProvider } from "~/context/SearchContext";
 import { CheckoutProvider } from "~/context/CheckoutContext";
 import { WishlistProvider } from "~/context/WishlistContext";
+import Toast from "react-native-toast-message";
+import ToastSuccess from "~/components/ToastSuccess";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -123,6 +125,7 @@ export default function RootLayout() {
                           options={{ headerShown: false }}
                         />
                       </Stack>
+                      <ToastSuccess />
                       <PortalHost />
                     </WishlistProvider>
                   </CheckoutProvider>

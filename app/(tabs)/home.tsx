@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Heart } from "lucide-react-native";
 import MyCarousel from "~/components/Carousel";
 import { Text } from "~/components/ui/text";
 import { ProductList } from "~/components/ProductCard";
@@ -14,7 +13,6 @@ import { ScrollView } from "react-native";
 import { useNotif } from "~/context/NotifContext";
 import { useEffect, useRef } from "react";
 import { useScroll } from "~/context/ScrollContext";
-import { TouchableOpacity } from "react-native";
 import { SearchBox } from "~/components/header/ui/searchbox";
 import { LocationSelect } from "~/components/header/ui/locationselect";
 import { LinearGradient } from "expo-linear-gradient";
@@ -59,6 +57,11 @@ export default function HomeScreen() {
           colors={[
             "#04349c",
             "#04349c",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
+            "transparent",
             "transparent",
             "transparent",
             "transparent",

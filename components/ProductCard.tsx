@@ -8,6 +8,7 @@ import IconButton from "./IconButton";
 import { useWishlist } from "~/context/WishlistContext";
 import { useNotif } from "~/context/NotifContext";
 import { useCart } from "~/context/CartContext";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width / 2 - 16;
@@ -57,6 +58,13 @@ export const ProductCard = ({ productCard, onAddToCart }: ProductCardProps) => {
       });
 
       notifBottomSheetRef.current?.present();
+    } else {
+      Toast.show({
+        type: "success",
+        text1: "Item removed from wishlist",
+        position: "bottom",
+        bottomOffset: 100,
+      });
     }
   };
 
@@ -81,12 +89,6 @@ export const ProductCard = ({ productCard, onAddToCart }: ProductCardProps) => {
         </Text>
       </View>
       <View className="flex-row justify-between items-center">
-        <Button onPress={onAddToCart} size={"sm"}>
-          <View className="flex-row items-center gap-2">
-            <Plus color="white" size={18} />
-            <Text className="font-bold">Cart</Text>
-          </View>
-        </Button>
         <IconButton
           icon={Heart}
           size={20}
@@ -94,6 +96,12 @@ export const ProductCard = ({ productCard, onAddToCart }: ProductCardProps) => {
           onPress={onWishlist}
           fill={isWishlist ? "red" : "transparent"}
         />
+        <Button onPress={onAddToCart} size={"sm"}>
+          <View className="flex-row items-center gap-2">
+            <Plus color="white" size={18} />
+            <Text className="font-bold">Cart</Text>
+          </View>
+        </Button>
       </View>
     </Card>
   );
